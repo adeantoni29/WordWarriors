@@ -2,14 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name ="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WordWarriors</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome to WordWarriors</h1>
-    <p>Choose a quiz below to build your avatar!</p>
+    <header>
+        <h1>Welcome to WordWarriors</h1>
+        <p> Choose one quiz to find your inner warrior!</p>
+    </header>
 
-    <button onclick="startQuiz()">Start Quiz</button>
+    <main>
+        <section id="quiz-selection">
+            <h2>Choose a Quiz!</h2>
+            <button onclick="startQuiz('lightsaber')"> StarWars Quiz</button>
+            <button onclick="startQuiz('marvel')"> Marvel Quiz</button>
+            <button onclick="startQuiz('quiz')">  Quiz</button>
+        </section>
+
+        <section id="game-preview" style="display:none;">
+            <h2> Your avatar is ready for battle... are you?</h2>
+            <p>Click below to start your typing journey!</p>
+            <button onclick="startGame()"> Start Game</button>
+        </section>
+    </main>
+    
 
     <script src="script.js"></script>
 </body>
