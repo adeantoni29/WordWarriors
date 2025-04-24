@@ -1,11 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Warriors</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Word Warriors</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .bar-container {
+      width: 60%;
+      background-color: #333;
+      border-radius: 5px;
+      margin: 10px auto;
+      overflow: hidden;
+    }
+    .health-bar {
+      height: 20px;
+      transition: width 0.3s ease;
+    }
+    .player-bar {
+      background-color: #3cb371;
+    }
+    .enemy-bar {
+      background-color: #ff5050;
+    }
+  </style>
 </head>
 <body>
-    
+  <h1>Word Warriors</h1>
+  <p class="intro-text">A turn-based RPG where your keyboard is your weapon.</p>
+
+  <div id="game-container" style="display: none;">
+    <p><strong>Stage:</strong> <span id="stageNumber">1</span></p>
+    <p><strong>Score:</strong> <span id="score">0</span></p>
+
+    <div id="character-display" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+      <div>
+        <img id="playerSprite" src="assets/avatar/player_idle.png" width="120" alt="Player">
+        <p style="text-align: center;">Player</p>
+      </div>
+      <div>
+        <img id="opponentSprite" src="assets/avatar/enemy_idle.png" width="120" alt="Enemy">
+        <p style="text-align: center;" id="opponentLabel">Enemy</p>
+      </div>
+    </div>
+
+    <div class="bar-container">
+      <div id="enemyHealth" class="health-bar enemy-bar" style="width: 100%;"></div>
+    </div>
+    <p>Enemy Health: <span id="enemyHPDisplay">100</span></p>
+
+    <div class="bar-container">
+      <div id="playerHealth" class="health-bar player-bar" style="width: 100%;"></div>
+    </div>
+    <p>Your Health: <span id="playerHPDisplay">100</span></p>
+
+    <p id="promptText"></p>
+
+    <input 
+      type="text" 
+      id="commandInput" 
+      placeholder="Start typing..." 
+      autocomplete="off"
+      disabled
+    />
+
+    <p id="game-log"></p>
+  </div>
+
+  <button id="startButton" onclick="startGame()">Start Game</button>
+
+  <script src="main.js"></script>
 </body>
 </html>

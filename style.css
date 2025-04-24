@@ -1,0 +1,45 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1e1e2f;
+    color: #ffffff;
+    text-align: center;
+    padding: 50px;
+}
+
+h1 {
+    font-size: 3rem;
+}
+
+.intro-text {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 60%;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #ff5050;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+button:hover {
+    background-color: #e03e3e;
+}
+
+#game-log {
+    margin-top: 20px;
+    font-style: italic;
+}
