@@ -20,9 +20,19 @@ Testers should do the following:
 - Verify that new abilities are granted at the correct time and are usable after that stages boss. 
 
 ## Usage
+To play WordWarriors, user will need to clone the repository and run the project in their preferred development environment. 
+The game is designed for a desktop/laptop use with a keyboard. The game relies on typing based input. 
+
+During Game play:
+- Type the prompts or commands to attack, block, or dodge to controll how your character reacts during combat.
+- Respond withing a 1-3 second window to enemy attacks with the correct spelling of the prompt or command to defend yourself.
+- Progress through the stages by defeating the inital wave of enemys and the stage specific boss.
+- After each boss is defeated, you will unlock a new ability that will be required to defeat specific enemies within later stages in the game.
+
+This game puts emphasis on fast typing, acuurate command recognition, and a strategic use of the unlocked abilities.
 
 
 ## Authors
 Asia Yang
-Axton De Antonit
+Axton De Antoni
 Connor Robbins
