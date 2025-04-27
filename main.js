@@ -15,7 +15,7 @@ const promptPool = {
   let enemies = [];
   let boss = null;
   
-  // Start New Game or Load Game
+  // New Game or Load Game
   function newGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
@@ -67,12 +67,12 @@ const promptPool = {
     enemiesContainer.innerHTML = "";
   
     enemies = [];
-    const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6); //More enemies as stage increases
+    const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6); // More enemies as stage increases
   
     for (let i = 0; i < numberOfEnemies; i++) {
       const enemy = {
         id: `enemy${i}`,
-        hp: stage, //Enemy HP = current stage
+        hp: stage, // Enemy HP = current stage
         element: null
       };
   
@@ -122,10 +122,17 @@ const promptPool = {
     inputEl.value = "";
     inputEl.focus();
   
+    // Dynamic Timer
+    let baseTime = 4000; // 4 seconds 
+    let timePerCharacter = 300; // +300ms per letter
+    let stageBonus = stage * 200; // +200ms per stage
+  
+    let totalTime = baseTime + (currentPrompt.length * timePerCharacter) + stageBonus;
+  
     timer = setTimeout(() => {
       handleFailure("Time's up!");
       enemyAttack();
-    }, 5000);
+    }, totalTime);
   }
   
   function handleTyping() {
@@ -207,7 +214,7 @@ const promptPool = {
     document.getElementById("playerHealth").style.width = playerHP + "%";
   }
   
-  // Stage Announcement
+  // Announcement after boss defeat
   function showStageAnnouncement() {
     const announcement = document.getElementById("stage-announcement");
     const gameContainer = document.getElementById("game-container");
@@ -225,6 +232,7 @@ const promptPool = {
       resetStage();
     }, 3000);
   }
+  
   
   
   
