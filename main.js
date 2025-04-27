@@ -34,10 +34,21 @@ const promptPool = {
   let playerHP = 100;
   let enemyHP = 100;
   
-  function startGame() {
-    document.getElementById("startButton").style.display = "none";
+  // New Game 
+  function newGame() {
+    document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
+    startGame();
+  }
   
+  function loadGame() {
+    document.getElementById("start-screen").style.display = "none";
+    document.getElementById("game-container").style.display = "block";
+    startGame();
+  }
+  
+  // Start Game
+  function startGame() {
     inputEl = document.getElementById("commandInput");
     inputEl.addEventListener("input", handleTyping);
   
@@ -162,3 +173,4 @@ const promptPool = {
     document.getElementById("playerHPDisplay").textContent = playerHP;
     document.getElementById("score").textContent = score;
   }
+  
