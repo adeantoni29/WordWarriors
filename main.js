@@ -15,7 +15,7 @@ const promptPool = {
   let enemies = [];
   let boss = null;
   
-  // START GAME BUTTONS
+  // New Game / Load Game
   function newGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
@@ -28,25 +28,23 @@ const promptPool = {
     startGame();
   }
   
-  // START GAME LOGIC
+  // Start Game
   function startGame() {
     inputEl = document.getElementById("commandInput");
     inputEl.addEventListener("input", handleTyping);
   
     resetStage();
-    inputEl.disabled = false;
-    nextPrompt();
   }
   
   function resetStage() {
     document.getElementById("stageNumber").textContent = stage;
     document.getElementById("score").textContent = score;
   
-    // Set up Player
+    // Reset Player
     playerHP = 100;
     updateBars();
   
-    // Set up Boss
+    // Set Boss
     const bossSprite = `assets/avatar/boss_${stage}_idle.png`;
     document.getElementById("bossSprite").src = bossSprite;
     document.getElementById("bossLabel").textContent = `Boss ${stage}`;
@@ -58,6 +56,10 @@ const promptPool = {
   
     // Create Enemies
     createEnemies();
+  
+    // 🔥 Now re-enable typing input and show new prompt
+    inputEl.disabled = false;
+    nextPrompt();
   }
   
   function createEnemies() {
@@ -65,12 +67,12 @@ const promptPool = {
     enemiesContainer.innerHTML = "";
   
     enemies = [];
-    const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6); // grow enemies over time
+    const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6); // More enemies as stage increases
   
     for (let i = 0; i < numberOfEnemies; i++) {
       const enemy = {
         id: `enemy${i}`,
-        hp: stage >= 5 ? 2 : 1, // enemies get tougher after stage 5
+        hp: stage >= 5 ? 2 : 1, // Enemies get tougher after stage 5
         element: null
       };
   
@@ -140,7 +142,7 @@ const promptPool = {
   }
   
   function attackEnemyOrBoss() {
-    // Prioritize living enemies
+    // Prioritize living enemies first
     const target = enemies.find(e => e.hp > 0);
   
     if (target) {
@@ -152,15 +154,16 @@ const promptPool = {
         document.getElementById(`enemyHealth_${enemies.indexOf(target)}`).style.width = (target.hp * 50) + "%";
       }
     } else {
-      // No living enemies left, attack boss
+      // No living enemies, attack the boss
       boss.hp--;
       if (boss.hp <= 0) {
         document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
         document.getElementById("bossHealth").style.width = "0%";
+  
         setTimeout(() => {
           stage++;
           resetStage();
-        }, 3000); // pause before next stage
+        }, 3000); // Short pause after boss defeat
       } else {
         updateBossBar();
       }
