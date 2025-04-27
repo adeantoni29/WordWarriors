@@ -123,9 +123,9 @@ const promptPool = {
     inputEl.focus();
   
     // Dynamic Timer
-    let baseTime = 4000; // 4 seconds 
-    let timePerCharacter = 300; // +300ms per letter
-    let stageBonus = stage * 200; // +200ms per stage
+    let baseTime = 5000; // 5 seconds base
+    let timePerCharacter = 400; // 400ms per letter
+    let stageBonus = 0; // no stage bonus
   
     let totalTime = baseTime + (currentPrompt.length * timePerCharacter) + stageBonus;
   
