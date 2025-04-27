@@ -15,7 +15,7 @@ const promptPool = {
   let enemies = [];
   let boss = null;
   
-  // New Game / Load Game
+  // Start New Game or Load Game
   function newGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
@@ -57,7 +57,7 @@ const promptPool = {
     // Create Enemies
     createEnemies();
   
-    // 🔥 Now re-enable typing input and show new prompt
+    // Enable typing and show next prompt
     inputEl.disabled = false;
     nextPrompt();
   }
@@ -67,12 +67,12 @@ const promptPool = {
     enemiesContainer.innerHTML = "";
   
     enemies = [];
-    const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6); // More enemies as stage increases
+    const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6); //More enemies as stage increases
   
     for (let i = 0; i < numberOfEnemies; i++) {
       const enemy = {
         id: `enemy${i}`,
-        hp: stage >= 5 ? 2 : 1, // Enemies get tougher after stage 5
+        hp: stage, //Enemy HP = current stage
         element: null
       };
   
@@ -142,19 +142,22 @@ const promptPool = {
   }
   
   function attackEnemyOrBoss() {
-    // Prioritize living enemies first
+    // Prioritize living enemies
     const target = enemies.find(e => e.hp > 0);
   
     if (target) {
       target.hp--;
+      const enemyIndex = enemies.indexOf(target);
+  
       if (target.hp <= 0) {
-        document.getElementById(`enemySprite_${enemies.indexOf(target)}`).src = "assets/avatar/enemy_hurt.png";
-        document.getElementById(`enemyHealth_${enemies.indexOf(target)}`).style.width = "0%";
+        document.getElementById(`enemySprite_${enemyIndex}`).src = "assets/avatar/enemy_hurt.png";
+        document.getElementById(`enemyHealth_${enemyIndex}`).style.width = "0%";
       } else {
-        document.getElementById(`enemyHealth_${enemies.indexOf(target)}`).style.width = (target.hp * 50) + "%";
+        const widthPercent = (target.hp / stage) * 100;
+        document.getElementById(`enemyHealth_${enemyIndex}`).style.width = `${widthPercent}%`;
       }
     } else {
-      // No living enemies, attack the boss
+      // No enemies alive = attack boss
       boss.hp--;
       if (boss.hp <= 0) {
         document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
@@ -162,8 +165,8 @@ const promptPool = {
   
         setTimeout(() => {
           stage++;
-          resetStage();
-        }, 3000); // Short pause after boss defeat
+          showStageAnnouncement();
+        }, 1000);
       } else {
         updateBossBar();
       }
@@ -203,5 +206,26 @@ const promptPool = {
   function updateBars() {
     document.getElementById("playerHealth").style.width = playerHP + "%";
   }
+  
+  // Stage Announcement
+  function showStageAnnouncement() {
+    const announcement = document.getElementById("stage-announcement");
+    const gameContainer = document.getElementById("game-container");
+  
+    // Hide gameplay
+    gameContainer.style.display = "none";
+  
+    // Get ready for Stage 
+    announcement.textContent = `Get ready for Stage ${stage}!`;
+    announcement.style.display = "block";
+  
+    setTimeout(() => {
+      announcement.style.display = "none";
+      gameContainer.style.display = "block";
+      resetStage();
+    }, 3000);
+  }
+  
+  
   
   
