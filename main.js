@@ -143,7 +143,7 @@ const promptPool = {
     timer = setTimeout(() => {
       handleFailure("Time's up!");
       enemyAttack();
-      barContainer.style.display = "none"; // hide timer bar after failure
+      barContainer.style.display = "none";
     }, totalTime);
   }
   
@@ -152,12 +152,9 @@ const promptPool = {
   
     if (typed === currentPrompt) {
       clearTimeout(timer);
-      document.getElementById("promptTimerBarContainer").style.display = "none"; // hide timer bar
-      attackEnemyOrBoss();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      inputEl.value = "";
-      inputEl.disabled = false;
-      nextPrompt();
+      attackEnemyOrBoss();
     }
   }
   
@@ -175,6 +172,10 @@ const promptPool = {
         const widthPercent = (target.hp / stage) * 100;
         document.getElementById(`enemyHealth_${enemyIndex}`).style.width = `${widthPercent}%`;
       }
+  
+      inputEl.value = "";
+      inputEl.disabled = false;
+      nextPrompt();
     } else {
       boss.hp--;
       if (boss.hp <= 0) {
@@ -187,6 +188,9 @@ const promptPool = {
         }, 1000);
       } else {
         updateBossBar();
+        inputEl.value = "";
+        inputEl.disabled = false;
+        nextPrompt();
       }
     }
   }
@@ -240,4 +244,5 @@ const promptPool = {
       resetStage();
     }, 3000);
   }
+  
   
