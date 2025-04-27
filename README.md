@@ -4,12 +4,11 @@
 Word Warriors is a turn-based RPG with typing-based mechanics. The player is a lone knight invading an evil fortress infested with supernatural creatures. To defeat enemies, players will choose moves and abilities based on the words or sentences presented in the stage to type. There will be at least five stages for the player to beat, each stage increasing in difficulty.
 
 ## Installation
-    1. Copy the Word Warriors SSH Key
+    1. Install Git and Git Bash
     2. Clone Word Warriors repository
-    3. Open Word Warriors on preferred IDE
-    4. Run on local server
-
-
+    3. Acquire a web browser to play Word Warriors
+    4. Run Word Warriors on local server through preferred IDE
+    
 ## Testing
 At this stage of development, WordWarriors is tested manually by running the game locally and validating the game play behavior.
 Testers should do the following:
@@ -22,6 +21,8 @@ Testers should do the following:
 ## Usage
 To play WordWarriors, user will need to clone the repository and run the project in their preferred development environment. 
 The game is designed for a desktop/laptop use with a keyboard. The game relies on typing based input. 
+
+Use this link to access Word Warriors: https://adeantoni29.github.io/WordWarriors/
 
 During Game play:
 - Type the prompts or commands to attack, block, or dodge to controll how your character reacts during combat.
