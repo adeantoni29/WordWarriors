@@ -27,8 +27,17 @@
 </head>
 <body>
   <h1>Word Warriors</h1>
-  <p class="intro-text">A turn-based RPG where your keyboard is your weapon.</p>
 
+ 
+  <!-- New/Load Screen -->
+  <div id="start-screen">
+    <h2>Word Warriors</h2>
+    <button onclick="newGame()">New Game</button>
+    <button onclick="loadGame()">Load Game</button>
+  </div>
+
+
+  <!-- Game Screen (hidden on new/load screen) -->
   <div id="game-container" style="display: none;">
     <p><strong>Stage:</strong> <span id="stageNumber">1</span></p>
     <p><strong>Score:</strong> <span id="score">0</span></p>
@@ -66,8 +75,6 @@
 
     <p id="game-log"></p>
   </div>
-
-  <button id="startButton" onclick="startGame()">Start Game</button>
 
   <script src="main.js"></script>
 </body>
