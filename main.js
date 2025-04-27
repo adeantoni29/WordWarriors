@@ -15,7 +15,7 @@ const promptPool = {
   let enemies = [];
   let boss = null;
   
-  // New Game or Load Game
+  // Start New Game or Load Game
   function newGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
@@ -67,12 +67,12 @@ const promptPool = {
     enemiesContainer.innerHTML = "";
   
     enemies = [];
-    const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6); // More enemies as stage increases
+    const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6);
   
     for (let i = 0; i < numberOfEnemies; i++) {
       const enemy = {
         id: `enemy${i}`,
-        hp: stage, // Enemy HP = current stage
+        hp: stage,
         element: null
       };
   
@@ -123,15 +123,27 @@ const promptPool = {
     inputEl.focus();
   
     // Dynamic Timer
-    let baseTime = 5000; // 5 seconds base
-    let timePerCharacter = 400; // 400ms per letter
-    let stageBonus = 0; // no stage bonus
+    let baseTime = 4000; // 4 seconds base
+    let timePerCharacter = 300; // +300ms per character
+    let stageBonus = stage * 200; // +200ms per stage
   
     let totalTime = baseTime + (currentPrompt.length * timePerCharacter) + stageBonus;
+  
+    // Setup visual timer bar
+    const barContainer = document.getElementById("promptTimerBarContainer");
+    const timerBar = document.getElementById("promptTimerBar");
+    barContainer.style.display = "block";
+    timerBar.style.width = "100%";
+    timerBar.style.transition = `width ${totalTime}ms linear`;
+  
+    setTimeout(() => {
+      timerBar.style.width = "0%";
+    }, 50);
   
     timer = setTimeout(() => {
       handleFailure("Time's up!");
       enemyAttack();
+      barContainer.style.display = "none"; // hide timer bar after failure
     }, totalTime);
   }
   
@@ -140,6 +152,7 @@ const promptPool = {
   
     if (typed === currentPrompt) {
       clearTimeout(timer);
+      document.getElementById("promptTimerBarContainer").style.display = "none"; // hide timer bar
       attackEnemyOrBoss();
   
       inputEl.value = "";
@@ -149,7 +162,6 @@ const promptPool = {
   }
   
   function attackEnemyOrBoss() {
-    // Prioritize living enemies
     const target = enemies.find(e => e.hp > 0);
   
     if (target) {
@@ -164,7 +176,6 @@ const promptPool = {
         document.getElementById(`enemyHealth_${enemyIndex}`).style.width = `${widthPercent}%`;
       }
     } else {
-      // No enemies alive = attack boss
       boss.hp--;
       if (boss.hp <= 0) {
         document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
@@ -214,15 +225,12 @@ const promptPool = {
     document.getElementById("playerHealth").style.width = playerHP + "%";
   }
   
-  // Announcement after boss defeat
+  // Stage Announcement
   function showStageAnnouncement() {
     const announcement = document.getElementById("stage-announcement");
     const gameContainer = document.getElementById("game-container");
   
-    // Hide gameplay
     gameContainer.style.display = "none";
-  
-    // Get ready for Stage 
     announcement.textContent = `Get ready for Stage ${stage}!`;
     announcement.style.display = "block";
   
@@ -232,8 +240,4 @@ const promptPool = {
       resetStage();
     }, 3000);
   }
-  
-  
-  
-  
   

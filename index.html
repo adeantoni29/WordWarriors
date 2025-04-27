@@ -34,6 +34,21 @@
       flex-direction: column;
       align-items: center;
     }
+    /* Timer bar */
+    #promptTimerBarContainer {
+      width: 60%;
+      margin: 10px auto;
+      height: 10px;
+      background-color: #555;
+      border-radius: 5px;
+      overflow: hidden;
+      display: none;
+    }
+    #promptTimerBar {
+      height: 100%;
+      width: 100%;
+      background-color: #00ff00;
+    }
   </style>
 </head>
 
@@ -53,7 +68,7 @@
     <p><strong>Stage:</strong> <span id="stageNumber">1</span></p>
     <p><strong>Score:</strong> <span id="score">0</span></p>
 
-    <!-- Character Area: Player | Enemies | Boss -->
+    <!-- Character Display: Player | Enemies | Boss -->
     <div id="character-area">
       <!-- Player -->
       <div class="character" id="player-area">
@@ -64,7 +79,7 @@
         <p>Player</p>
       </div>
 
-      <!-- Enemies Container -->
+      <!-- Enemies -->
       <div id="enemies-container" style="display: flex; gap: 20px;"></div>
 
       <!-- Boss -->
@@ -77,8 +92,15 @@
       </div>
     </div>
 
+    <!-- Prompt Text -->
     <p id="promptText"></p>
 
+    <!-- Prompt Timer Bar -->
+    <div id="promptTimerBarContainer">
+      <div id="promptTimerBar"></div>
+    </div>
+
+    <!-- Typing Input -->
     <input 
       type="text" 
       id="commandInput" 
@@ -87,15 +109,17 @@
       disabled
     />
 
+    <!-- Game Log -->
     <p id="game-log"></p>
-
   </div>
 
   <!-- Stage Announcement -->
   <div id="stage-announcement" style="display: none; text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;">
   </div>
 
+  <!-- Script -->
   <script src="main.js"></script>
 </body>
 </html>
+
 
