@@ -1,8 +1,14 @@
-const promptPool = {
-    easy: ["block", "slash", "roll", "jab"],
-    medium: ["shield", "parry", "strike", "evade"],
-    hard: ["counterattack", "reposition", "intercept", "lunge"],
-    insane: ["disengagement", "retribution", "fortification", "circumvent"]
+const promptPoolAttack = {
+    easy: ["slash", "jab"],
+    medium: ["parry", "strike"],
+    hard: ["counterattack", "intercept"],
+    insane: ["disengagement", "retribution"]
+  };
+  const promptPoolDefend = {
+    easy: ["block", "roll"],
+    medium: ["shield", "evade"],
+    hard: ["reposition", "lunge"],
+    insane: ["fortification", "circumvent"]
   };
   
   let currentPrompt = "";
@@ -14,6 +20,7 @@ const promptPool = {
   let playerHP = 100;
   let enemies = [];
   let boss = null;
+  let playerTurn = false;
   
   // Start New Game or Load Game
   function newGame() {
@@ -107,16 +114,29 @@ const promptPool = {
   }
   
   function nextPrompt() {
+    if (playerTurn == false) { // Alternate between player and enemy turns.
+      playerTurn = true;
+    } else {
+      playerTurn = false;
+    }
+
     let difficulty = "easy";
     if (stage >= 4 && stage < 7) difficulty = "medium";
     else if (stage >= 7 && stage < 10) difficulty = "hard";
     else if (stage >= 10) difficulty = "insane";
   
-    const pool = promptPool[difficulty];
-    currentPrompt = pool[Math.floor(Math.random() * pool.length)];
-  
-    document.getElementById("promptText").textContent =
-      `Type: "${currentPrompt}"`;
+    const attackPool = promptPoolAttack[difficulty];
+    const defendPool = promptPoolDefend[difficulty];
+
+    if (playerTurn == false) {
+      currentPrompt = defendPool[Math.floor(Math.random() * defendPool.length)];
+      document.getElementById("promptText").textContent =
+      `Defend yourself! Type: "${currentPrompt}"`;
+    } else {
+      currentPrompt = attackPool[Math.floor(Math.random() * attackPool.length)];
+      document.getElementById("promptText").textContent =
+      `Fight the enemy! Type: "${currentPrompt}"`;
+    }
   
     document.getElementById("game-log").textContent = "";
     inputEl.value = "";
@@ -133,10 +153,11 @@ const promptPool = {
     const barContainer = document.getElementById("promptTimerBarContainer");
     const timerBar = document.getElementById("promptTimerBar");
     barContainer.style.display = "block";
+    timerBar.style.transition = `none`;
     timerBar.style.width = "100%";
-    timerBar.style.transition = `width ${totalTime}ms linear`;
   
     setTimeout(() => {
+      timerBar.style.transition = `width ${totalTime}ms linear`;
       timerBar.style.width = "0%";
     }, 50);
   
@@ -154,7 +175,11 @@ const promptPool = {
       clearTimeout(timer);
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      attackEnemyOrBoss();
+      if (playerTurn == true) { // Only attack if it's the player's turn.
+        attackEnemyOrBoss();
+      } else {
+        nextPrompt();
+      }
     }
   }
   
@@ -203,7 +228,11 @@ const promptPool = {
   function handleFailure(message) {
     inputEl.disabled = true;
     document.getElementById("game-log").textContent = message;
-    playerHP -= 10;
+
+    if (playerTurn == false) { // Only take damage if it's the enemy's turn.
+      playerHP -= 10;
+    }
+
     if (playerHP <= 0) {
       document.getElementById("game-log").textContent = "You have been defeated!";
       inputEl.removeEventListener("input", handleTyping);
@@ -217,7 +246,9 @@ const promptPool = {
   }
   
   function enemyAttack() {
-    playerHP -= 15;
+    if (playerTurn == false) { // Only take damage if it's the enemy's turn.
+      playerHP -= 15;
+    }
     if (playerHP <= 0) {
       document.getElementById("game-log").textContent = "You have been defeated!";
       inputEl.disabled = true;
