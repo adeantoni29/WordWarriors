@@ -10,13 +10,63 @@ Word Warriors is a turn-based RPG with typing-based mechanics. The player is a l
     4. Run Word Warriors on local server through preferred IDE
     
 ## Testing
-At this stage of development, WordWarriors is tested manually by running the game locally and validating the game play behavior.
-Testers should do the following:
-- Check the reaction window of blocking and dodging enemy attacks.
-- Play through each stage to ensure progression within the stages, bosses being availible and unlcoked, and enemy wave behavior.
-- Type various combat commands and combinations to make sure the execute correctly.
-- Confirm that errors in typing result in failed attacks or failed defense.
-- Verify that new abilities are granted at the correct time and are usable after that stages boss. 
+Right now WordWarriors is tested manually by running the game locally and checking if everything works the way it’s supposed to. Here's how testing is being done:
+
+Combat and Reaction Checks
+Start a new game.
+
+Wait for an enemy to attack.
+
+Type a correct block command (like "block") when prompted.
+
+What should happen: The player blocks and takes little or no damage.
+
+Let the enemy attack again.
+
+Type a dodge command (like "roll") in time.
+
+What should happen: The player dodges completely and avoids taking any damage.
+
+Try typing something wrong during an attack window.
+
+What should happen: The player fails to defend and takes full damage.
+
+Stage Progression Testing
+Play through a full stage.
+
+Make sure all enemies are defeated before the boss is defeated.
+
+Beat the boss only after clearing the enemies.
+
+What should happen: After the boss and all enemies are defeated, the game shows the "Get ready for Stage #!" announcement.
+
+Move through multiple stages.
+
+What should happen: New enemies show up and bosses get harder as stages increase.
+
+Boss animations (idle, attack, hurt) should update correctly at each stage.
+
+Ability and Prompt Checks
+Type in different combat commands from the prompt (like "jab", "counterattack", etc.).
+
+What should happen: Correct typing triggers the right action instantly.
+
+Type in wrong commands or random words.
+
+What should happen: The game recognizes it as a failed action and the player gets hit.
+
+Watch the timer bar during prompts.
+
+What should happen: The timer bar shrinks down and disappears when time runs out.
+
+General Gameplay Flow
+Check that enemy health bars update when enemies are attacked.
+
+Make sure after enemies are defeated, they stay hurt while fighting the boss.
+
+Watch that the score updates correctly every time an attack is successful.
+
+After each prompt, the typing input should re-enable for the next one.
 
 ## Usage
 To play WordWarriors, user will need to clone the repository and run the project in their preferred development environment. 

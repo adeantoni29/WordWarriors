@@ -7,55 +7,100 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     .bar-container {
-      width: 60%;
+      width: 100px;
       background-color: #333;
       border-radius: 5px;
-      margin: 10px auto;
       overflow: hidden;
+      margin-top: 5px;
     }
     .health-bar {
-      height: 20px;
-      transition: width 0.3s ease;
-    }
-    .player-bar {
+      height: 10px;
       background-color: #3cb371;
+      transition: width 0.3s ease;
     }
     .enemy-bar {
       background-color: #ff5050;
     }
+    #character-area {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .character {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Timer bar */
+    #promptTimerBarContainer {
+      width: 60%;
+      margin: 10px auto;
+      height: 10px;
+      background-color: #555;
+      border-radius: 5px;
+      overflow: hidden;
+      display: none;
+    }
+    #promptTimerBar {
+      height: 100%;
+      width: 100%;
+      background-color: #00ff00;
+    }
   </style>
 </head>
+
 <body>
   <h1>Word Warriors</h1>
-  <p class="intro-text">A turn-based RPG where your keyboard is your weapon.</p>
 
+  <!-- Start Screen -->
+  <div id="start-screen">
+    <h2>Word Warriors</h2>
+    <button onclick="newGame()">New Game</button>
+    <button onclick="loadGame()">Load Game</button>
+  </div>
+
+  <!-- Game Screen -->
   <div id="game-container" style="display: none;">
+
     <p><strong>Stage:</strong> <span id="stageNumber">1</span></p>
     <p><strong>Score:</strong> <span id="score">0</span></p>
 
-    <div id="character-display" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
-      <div>
-        <img id="playerSprite" src="assets/avatar/player_idle.png" width="120" alt="Player">
-        <p style="text-align: center;">Player</p>
+    <!-- Character Display: Player | Enemies | Boss -->
+    <div id="character-area">
+      <!-- Player -->
+      <div class="character" id="player-area">
+        <img id="playerSprite" src="assets/avatar/player_idle.png" width="100" alt="Player">
+        <div class="bar-container">
+          <div id="playerHealth" class="health-bar" style="width: 100%;"></div>
+        </div>
+        <p>Player</p>
       </div>
-      <div>
-        <img id="opponentSprite" src="assets/avatar/enemy_idle.png" width="120" alt="Enemy">
-        <p style="text-align: center;" id="opponentLabel">Enemy</p>
+
+      <!-- Enemies -->
+      <div id="enemies-container" style="display: flex; gap: 20px;"></div>
+
+      <!-- Boss -->
+      <div class="character" id="boss-area">
+        <img id="bossSprite" src="assets/avatar/boss_1_idle.png" width="140" alt="Boss">
+        <div class="bar-container">
+          <div id="bossHealth" class="health-bar enemy-bar" style="width: 100%;"></div>
+        </div>
+        <p id="bossLabel">Boss 1</p>
       </div>
     </div>
 
-    <div class="bar-container">
-      <div id="enemyHealth" class="health-bar enemy-bar" style="width: 100%;"></div>
-    </div>
-    <p>Enemy Health: <span id="enemyHPDisplay">100</span></p>
-
-    <div class="bar-container">
-      <div id="playerHealth" class="health-bar player-bar" style="width: 100%;"></div>
-    </div>
-    <p>Your Health: <span id="playerHPDisplay">100</span></p>
-
+    <!-- Prompt Text -->
     <p id="promptText"></p>
 
+    <!-- Prompt Timer Bar -->
+    <div id="promptTimerBarContainer">
+      <div id="promptTimerBar"></div>
+    </div>
+
+    <!-- Typing Input -->
     <input 
       type="text" 
       id="commandInput" 
@@ -64,11 +109,17 @@
       disabled
     />
 
+    <!-- Game Log -->
     <p id="game-log"></p>
   </div>
 
-  <button id="startButton" onclick="startGame()">Start Game</button>
+  <!-- Stage Announcement -->
+  <div id="stage-announcement" style="display: none; text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;">
+  </div>
 
+  <!-- Script -->
   <script src="main.js"></script>
 </body>
 </html>
+
+
