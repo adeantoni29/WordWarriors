@@ -1,3 +1,4 @@
+// Prompt Pools
 const promptPoolAttack = {
     easy: ["slash", "jab"],
     medium: ["parry", "strike"],
@@ -22,7 +23,46 @@ const promptPoolAttack = {
   let boss = null;
   let playerTurn = false;
   
-  // Start New Game or Load Game
+  // PromptTimer class
+  class PromptTimer {
+    constructor(durationMs, onExpire, onProgress) {
+      this.duration = durationMs;
+      this.onExpire = onExpire;
+      this.onProgress = onProgress;
+      this.startTime = null;
+      this.frameId = null;
+      this.running = false;
+    }
+  
+    start() {
+      this.running = true;
+      this.startTime = performance.now();
+      this.tick();
+    }
+  
+    tick = () => {
+      const now = performance.now();
+      const elapsed = now - this.startTime;
+      const progress = Math.min(elapsed / this.duration, 1);
+  
+      if (this.onProgress) {
+        this.onProgress(1 - progress);
+      }
+  
+      if (elapsed >= this.duration) {
+        this.running = false;
+        this.onExpire?.();
+      } else {
+        this.frameId = requestAnimationFrame(this.tick);
+      }
+    }
+  
+    stop() {
+      if (this.frameId) cancelAnimationFrame(this.frameId);
+      this.running = false;
+    }
+  }
+  
   function newGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
@@ -35,23 +75,18 @@ const promptPoolAttack = {
     startGame();
   }
   
-  // Start Game
   function startGame() {
     inputEl = document.getElementById("commandInput");
     inputEl.addEventListener("input", handleTyping);
-  
     resetStage();
   }
   
   function resetStage() {
     document.getElementById("stageNumber").textContent = stage;
     document.getElementById("score").textContent = score;
-  
-    // Reset Player
     playerHP = 100;
     updateBars();
   
-    // Set Boss
     const bossSprite = `assets/avatar/boss_${stage}_idle.png`;
     document.getElementById("bossSprite").src = bossSprite;
     document.getElementById("bossLabel").textContent = `Boss ${stage}`;
@@ -61,10 +96,7 @@ const promptPoolAttack = {
     };
     updateBossBar();
   
-    // Create Enemies
     createEnemies();
-  
-    // Enable typing and show next prompt
     inputEl.disabled = false;
     nextPrompt();
   }
@@ -72,17 +104,12 @@ const promptPoolAttack = {
   function createEnemies() {
     const enemiesContainer = document.getElementById("enemies-container");
     enemiesContainer.innerHTML = "";
-  
     enemies = [];
+  
     const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6);
   
     for (let i = 0; i < numberOfEnemies; i++) {
-      const enemy = {
-        id: `enemy${i}`,
-        hp: stage,
-        element: null
-      };
-  
+      const enemy = { id: `enemy${i}`, hp: stage, element: null };
       const enemyDiv = document.createElement("div");
       enemyDiv.classList.add("character");
   
@@ -107,75 +134,68 @@ const promptPoolAttack = {
       enemyDiv.appendChild(document.createElement("p")).innerText = `Enemy`;
   
       enemiesContainer.appendChild(enemyDiv);
-  
       enemy.element = enemyDiv;
       enemies.push(enemy);
     }
   }
   
   function nextPrompt() {
-    if (playerTurn == false) { // Alternate between player and enemy turns.
-      playerTurn = true;
-    } else {
-      playerTurn = false;
-    }
-
+    playerTurn = !playerTurn;
+  
     let difficulty = "easy";
     if (stage >= 4 && stage < 7) difficulty = "medium";
     else if (stage >= 7 && stage < 10) difficulty = "hard";
     else if (stage >= 10) difficulty = "insane";
   
-    const attackPool = promptPoolAttack[difficulty];
-    const defendPool = promptPoolDefend[difficulty];
-
-    if (playerTurn == false) {
-      currentPrompt = defendPool[Math.floor(Math.random() * defendPool.length)];
-      document.getElementById("promptText").textContent =
-      `Defend yourself! Type: "${currentPrompt}"`;
-    } else {
-      currentPrompt = attackPool[Math.floor(Math.random() * attackPool.length)];
-      document.getElementById("promptText").textContent =
-      `Fight the enemy! Type: "${currentPrompt}"`;
-    }
+    const pool = playerTurn ? promptPoolAttack[difficulty] : promptPoolDefend[difficulty];
+    currentPrompt = pool[Math.floor(Math.random() * pool.length)];
+    document.getElementById("promptText").textContent =
+      playerTurn
+        ? `Fight the enemy! Type: "${currentPrompt}"`
+        : `Defend yourself! Type: "${currentPrompt}"`;
   
     document.getElementById("game-log").textContent = "";
     inputEl.value = "";
+    inputEl.disabled = false;
     inputEl.focus();
   
-    // Dynamic Timer
-    let baseTime = 4000; // 4 seconds base
-    let timePerCharacter = 300; // +300ms per character
-    let stageBonus = stage * 200; // +200ms per stage
+    const baseTime = 4000;
+    const timePerCharacter = 300;
+    const stageBonus = stage * 200;
+    const totalTime = baseTime + currentPrompt.length * timePerCharacter + stageBonus;
   
-    let totalTime = baseTime + (currentPrompt.length * timePerCharacter) + stageBonus;
-  
-    // Setup visual timer bar
     const barContainer = document.getElementById("promptTimerBarContainer");
     const timerBar = document.getElementById("promptTimerBar");
     barContainer.style.display = "block";
-    timerBar.style.transition = `none`;
+    timerBar.style.transition = "none";
     timerBar.style.width = "100%";
   
+    if (timer && timer.stop) timer.stop();
     setTimeout(() => {
       timerBar.style.transition = `width ${totalTime}ms linear`;
-      timerBar.style.width = "0%";
     }, 50);
   
-    timer = setTimeout(() => {
-      handleFailure("Time's up!");
-      enemyAttack();
-      barContainer.style.display = "none";
-    }, totalTime);
+    timer = new PromptTimer(
+      totalTime,
+      () => {
+        handleFailure("Time's up!");
+        if (!playerTurn) enemyAttack();
+        barContainer.style.display = "none";
+      },
+      (remaining) => {
+        timerBar.style.width = `${remaining * 100}%`;
+      }
+    );
+  
+    timer.start();
   }
   
   function handleTyping() {
     const typed = inputEl.value.trim().toLowerCase();
-  
     if (typed === currentPrompt) {
-      clearTimeout(timer);
+      if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
-  
-      if (playerTurn == true) { // Only attack if it's the player's turn.
+      if (playerTurn) {
         attackEnemyOrBoss();
       } else {
         nextPrompt();
@@ -185,7 +205,6 @@ const promptPoolAttack = {
   
   function attackEnemyOrBoss() {
     const target = enemies.find(e => e.hp > 0);
-  
     if (target) {
       target.hp--;
       const enemyIndex = enemies.indexOf(target);
@@ -206,7 +225,6 @@ const promptPoolAttack = {
       if (boss.hp <= 0) {
         document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
         document.getElementById("bossHealth").style.width = "0%";
-  
         setTimeout(() => {
           stage++;
           showStageAnnouncement();
@@ -228,11 +246,8 @@ const promptPoolAttack = {
   function handleFailure(message) {
     inputEl.disabled = true;
     document.getElementById("game-log").textContent = message;
-
-    if (playerTurn == false) { // Only take damage if it's the enemy's turn.
-      playerHP -= 10;
-    }
-
+    if (!playerTurn) playerHP -= 10;
+  
     if (playerHP <= 0) {
       document.getElementById("game-log").textContent = "You have been defeated!";
       inputEl.removeEventListener("input", handleTyping);
@@ -246,9 +261,7 @@ const promptPoolAttack = {
   }
   
   function enemyAttack() {
-    if (playerTurn == false) { // Only take damage if it's the enemy's turn.
-      playerHP -= 15;
-    }
+    if (!playerTurn) playerHP -= 15;
     if (playerHP <= 0) {
       document.getElementById("game-log").textContent = "You have been defeated!";
       inputEl.disabled = true;
@@ -260,11 +273,9 @@ const promptPoolAttack = {
     document.getElementById("playerHealth").style.width = playerHP + "%";
   }
   
-  // Stage Announcement
   function showStageAnnouncement() {
     const announcement = document.getElementById("stage-announcement");
     const gameContainer = document.getElementById("game-container");
-  
     gameContainer.style.display = "none";
     announcement.textContent = `Get ready for Stage ${stage}!`;
     announcement.style.display = "block";

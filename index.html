@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Word Warriors</title>
   <link rel="stylesheet" href="style.css" />
   <style>
@@ -34,7 +34,6 @@
       flex-direction: column;
       align-items: center;
     }
-    /* Timer bar */
     #promptTimerBarContainer {
       width: 60%;
       margin: 10px auto;
@@ -64,7 +63,6 @@
 
   <!-- Game Screen -->
   <div id="game-container" style="display: none;">
-
     <p><strong>Stage:</strong> <span id="stageNumber">1</span></p>
     <p><strong>Score:</strong> <span id="score">0</span></p>
 
@@ -72,7 +70,7 @@
     <div id="character-area">
       <!-- Player -->
       <div class="character" id="player-area">
-        <img id="playerSprite" src="assets/avatar/player_idle.png" width="100" alt="Player">
+        <img id="playerSprite" src="assets/avatar/player_idle.png" width="100" alt="Player" />
         <div class="bar-container">
           <div id="playerHealth" class="health-bar" style="width: 100%;"></div>
         </div>
@@ -84,7 +82,7 @@
 
       <!-- Boss -->
       <div class="character" id="boss-area">
-        <img id="bossSprite" src="assets/avatar/boss_1_idle.png" width="140" alt="Boss">
+        <img id="bossSprite" src="assets/avatar/boss_1_idle.png" width="140" alt="Boss" />
         <div class="bar-container">
           <div id="bossHealth" class="health-bar enemy-bar" style="width: 100%;"></div>
         </div>
@@ -114,10 +112,9 @@
   </div>
 
   <!-- Stage Announcement -->
-  <div id="stage-announcement" style="display: none; text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;">
-  </div>
+  <div id="stage-announcement" style="display: none; text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;"></div>
 
-  <!-- Script -->
+  <!-- Game Logic Script -->
   <script src="main.js"></script>
 </body>
 </html>
