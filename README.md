@@ -1,89 +1,95 @@
-# WordWarriors
+# Word Warriors
 
 ## About
-Word Warriors is a turn-based RPG with typing-based mechanics. The player is a lone knight invading an evil fortress infested with supernatural creatures. To defeat enemies, players will choose moves and abilities based on the words or sentences presented in the stage to type. There will be at least five stages for the player to beat, each stage increasing in difficulty.
+Word Warriors is a turn-based typing RPG I built where you're a knight battling your way through an evil fortress. To fight off enemies, you have to type the words or phrases that pop up before the timer runs out. Each stage gets harder with faster timers and tougher prompts. There are at least five stages, each with a boss fight at the end.
 
 ## Installation
-    1. Install Git and Git Bash
-    2. Clone Word Warriors repository
-    3. Acquire a web browser to play Word Warriors
-    4. Run Word Warriors on local server through preferred IDE
-    
-## Testing
-Right now WordWarriors is tested manually by running the game locally and checking if everything works the way it’s supposed to. Here's how testing is being done:
-
-Combat and Reaction Checks
-Start a new game.
-
-Wait for an enemy to attack.
-
-Type a correct block command (like "block") when prompted.
-
-What should happen: The player blocks and takes little or no damage.
-
-Let the enemy attack again.
-
-Type a dodge command (like "roll") in time.
-
-What should happen: The player dodges completely and avoids taking any damage.
-
-Try typing something wrong during an attack window.
-
-What should happen: The player fails to defend and takes full damage.
-
-Stage Progression Testing
-Play through a full stage.
-
-Make sure all enemies are defeated before the boss is defeated.
-
-Beat the boss only after clearing the enemies.
-
-What should happen: After the boss and all enemies are defeated, the game shows the "Get ready for Stage #!" announcement.
-
-Move through multiple stages.
-
-What should happen: New enemies show up and bosses get harder as stages increase.
-
-Boss animations (idle, attack, hurt) should update correctly at each stage.
-
-Ability and Prompt Checks
-Type in different combat commands from the prompt (like "jab", "counterattack", etc.).
-
-What should happen: Correct typing triggers the right action instantly.
-
-Type in wrong commands or random words.
-
-What should happen: The game recognizes it as a failed action and the player gets hit.
-
-Watch the timer bar during prompts.
-
-What should happen: The timer bar shrinks down and disappears when time runs out.
-
-General Gameplay Flow
-Check that enemy health bars update when enemies are attacked.
-
-Make sure after enemies are defeated, they stay hurt while fighting the boss.
-
-Watch that the score updates correctly every time an attack is successful.
-
-After each prompt, the typing input should re-enable for the next one.
+1. Make sure Git is installed.
+2. Clone this repo:
+   ```bash
+   git clone https://github.com/adeantoni29/WordWarriors.git
+   ```
+3. Open the folder in your IDE.
+4. Launch `index.html` in your browser — no server or extra setup needed.
 
 ## Usage
-To play WordWarriors, user will need to clone the repository and run the project in their preferred development environment. 
-The game is designed for a desktop/laptop use with a keyboard. The game relies on typing based input. 
+Play it right in your browser: [Play Word Warriors](https://adeantoni29.github.io/WordWarriors/)
 
-Use this link to access Word Warriors: https://adeantoni29.github.io/WordWarriors/
+To play:
+- Use a keyboard (desktop/laptop is best).
+- When it's your turn, type the attack prompt to damage enemies.
+- When it's the enemy’s turn, type the defense prompt to avoid damage.
+- If you type wrong or run out of time, you take a hit.
+- Beat all the enemies and the boss to move on to the next stage.
 
-During Game play:
-- Type the prompts or commands to attack, block, or dodge to controll how your character reacts during combat.
-- Respond withing a 1-3 second window to enemy attacks with the correct spelling of the prompt or command to defend yourself.
-- Progress through the stages by defeating the inital wave of enemys and the stage specific boss.
-- After each boss is defeated, you will unlock a new ability that will be required to defeat specific enemies within later stages in the game.
+## Testing
 
-This game puts emphasis on fast typing, acuurate command recognition, and a strategic use of the unlocked abilities.
+Right now, we are manually testing Word Warriors by running the game locally and verifying how things behave during gameplay. Here's how we check everything's working:
 
+### Combat Tests
+- **Block & Dodge Timing:**  
+  Start a new game and wait for an enemy to attack.  
+  Type a defense prompt like "block" or "roll" before the timer runs out.  
+  Should take little or no damage.
+
+- **Incorrect Defense:**  
+  Let the timer run out or type the wrong thing.  
+  Should take full damage.
+
+- **Correct Attack Input:**  
+  On your turn, type an attack word like "jab" or "counterattack" correctly.  
+  Enemy takes damage, health bar updates.
+
+- **Wrong Attack Input:**  
+  Type something random or incorrect.  
+  Nothing happens, move is skipped, timer expires.
+
+### Timer Functionality
+- **Countdown Reset:**  
+  Timer should reset and restart every time a new prompt appears.  
+  Each phrase starts with a full timer bar.
+
+- **Early Success Cancels Timer:**  
+  Typing the correct word before time’s up should stop the timer.  
+  Timer bar disappears, next prompt starts immediately.
+
+- **Failure Timeout:**  
+  If nothing is typed in time, the player takes damage (or the enemy gets a free hit).  
+  Timer bar fades and message shows.
+
+### Stage Progression
+- **Enemies First, Then Boss:**  
+  Boss shouldn't be beatable until all enemies are down.  
+  Game logic holds that flow.
+
+- **Stage Advance Message:**  
+  After the boss dies, a message like "Get ready for Stage 2!" should appear.  
+  Brief pause, then next stage loads.
+
+- **Boss Animations:**  
+  Boss sprite changes to `hurt.png` when defeated.  
+  Image updates correctly.
+
+### General Game Flow
+- Health bars update with every hit  
+- Score increases when the player attacks successfully  
+- Input box is re-enabled after each turn  
+- Game ends if player health drops to 0
+
+## Features
+- Real-time typing with turn-based gameplay
+- Bosses and enemies get harder each stage
+- Randomized prompt pools by difficulty
+- Visual health bars and timer bar
+- Efficient timer using `requestAnimationFrame`
+
+## Future Plans
+- Unlockable abilities after boss fights
+- Add sound and visual effects
+- Typing accuracy tracker
+- Save/load system
 
 ## Authors
-Asia Yang
-Axton De Antoni
-Connor Robbins
+- Asia Yang  
+- Axton De Antoni  
+- Connor Robbins

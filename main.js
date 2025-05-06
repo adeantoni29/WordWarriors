@@ -1,10 +1,10 @@
-// Prompt Pools
 const promptPoolAttack = {
     easy: ["slash", "jab"],
     medium: ["parry", "strike"],
     hard: ["counterattack", "intercept"],
     insane: ["disengagement", "retribution"]
   };
+  
   const promptPoolDefend = {
     easy: ["block", "roll"],
     medium: ["shield", "evade"],
@@ -14,6 +14,7 @@ const promptPoolAttack = {
   
   let currentPrompt = "";
   let timer = null;
+  let storedPromptTimer = null;
   let inputEl = null;
   let stage = 1;
   let turns = 0;
@@ -22,8 +23,9 @@ const promptPoolAttack = {
   let enemies = [];
   let boss = null;
   let playerTurn = false;
+  let isPaused = false;
   
-  // PromptTimer class
+  //  Timer Class 
   class PromptTimer {
     constructor(durationMs, onExpire, onProgress) {
       this.duration = durationMs;
@@ -41,6 +43,7 @@ const promptPoolAttack = {
     }
   
     tick = () => {
+      if (!this.running) return;
       const now = performance.now();
       const elapsed = now - this.startTime;
       const progress = Math.min(elapsed / this.duration, 1);
@@ -63,6 +66,7 @@ const promptPoolAttack = {
     }
   }
   
+  //  Game Start 
   function newGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
@@ -78,12 +82,49 @@ const promptPoolAttack = {
   function startGame() {
     inputEl = document.getElementById("commandInput");
     inputEl.addEventListener("input", handleTyping);
+  
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "p" || e.key === "P") {
+        isPaused ? resumeGame() : pauseGame();
+      }
+    });
+  
     resetStage();
   }
   
+  //  Pause / Resume 
+  function pauseGame() {
+    if (isPaused) return;
+    isPaused = true;
+  
+    if (timer && timer.stop) {
+      storedPromptTimer = timer;
+      timer.stop();
+    }
+  
+    inputEl.disabled = true;
+    document.getElementById("pause-screen").style.display = "flex";
+  }
+  
+  function resumeGame() {
+    if (!isPaused) return;
+    isPaused = false;
+  
+    if (storedPromptTimer && storedPromptTimer.start) {
+      timer = storedPromptTimer;
+      timer.start();
+    }
+  
+    inputEl.disabled = false;
+    inputEl.focus();
+    document.getElementById("pause-screen").style.display = "none";
+  }
+  
+  // Stage Setup 
   function resetStage() {
     document.getElementById("stageNumber").textContent = stage;
     document.getElementById("score").textContent = score;
+  
     playerHP = 100;
     updateBars();
   
@@ -95,8 +136,8 @@ const promptPoolAttack = {
       maxHp: stage + 1
     };
     updateBossBar();
-  
     createEnemies();
+  
     inputEl.disabled = false;
     nextPrompt();
   }
@@ -104,12 +145,17 @@ const promptPoolAttack = {
   function createEnemies() {
     const enemiesContainer = document.getElementById("enemies-container");
     enemiesContainer.innerHTML = "";
-    enemies = [];
   
+    enemies = [];
     const numberOfEnemies = Math.min(2 + Math.floor(stage / 2), 6);
   
     for (let i = 0; i < numberOfEnemies; i++) {
-      const enemy = { id: `enemy${i}`, hp: stage, element: null };
+      const enemy = {
+        id: `enemy${i}`,
+        hp: stage,
+        element: null
+      };
+  
       const enemyDiv = document.createElement("div");
       enemyDiv.classList.add("character");
   
@@ -139,7 +185,10 @@ const promptPoolAttack = {
     }
   }
   
+  // Prompt Logic 
   function nextPrompt() {
+    if (isPaused) return;
+  
     playerTurn = !playerTurn;
   
     let difficulty = "easy";
@@ -149,10 +198,10 @@ const promptPoolAttack = {
   
     const pool = playerTurn ? promptPoolAttack[difficulty] : promptPoolDefend[difficulty];
     currentPrompt = pool[Math.floor(Math.random() * pool.length)];
-    document.getElementById("promptText").textContent =
-      playerTurn
-        ? `Fight the enemy! Type: "${currentPrompt}"`
-        : `Defend yourself! Type: "${currentPrompt}"`;
+  
+    document.getElementById("promptText").textContent = playerTurn
+      ? `Fight the enemy! Type: "${currentPrompt}"`
+      : `Defend yourself! Type: "${currentPrompt}"`;
   
     document.getElementById("game-log").textContent = "";
     inputEl.value = "";
@@ -171,6 +220,7 @@ const promptPoolAttack = {
     timerBar.style.width = "100%";
   
     if (timer && timer.stop) timer.stop();
+  
     setTimeout(() => {
       timerBar.style.transition = `width ${totalTime}ms linear`;
     }, 50);
@@ -190,11 +240,16 @@ const promptPoolAttack = {
     timer.start();
   }
   
+  //  Typing Handler
   function handleTyping() {
+    if (isPaused) return;
+  
     const typed = inputEl.value.trim().toLowerCase();
+  
     if (typed === currentPrompt) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
+  
       if (playerTurn) {
         attackEnemyOrBoss();
       } else {
@@ -203,8 +258,10 @@ const promptPoolAttack = {
     }
   }
   
+  //  Attack Logic 
   function attackEnemyOrBoss() {
     const target = enemies.find(e => e.hp > 0);
+  
     if (target) {
       target.hp--;
       const enemyIndex = enemies.indexOf(target);
@@ -225,6 +282,7 @@ const promptPoolAttack = {
       if (boss.hp <= 0) {
         document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
         document.getElementById("bossHealth").style.width = "0%";
+  
         setTimeout(() => {
           stage++;
           showStageAnnouncement();
@@ -243,9 +301,11 @@ const promptPoolAttack = {
     document.getElementById("bossHealth").style.width = `${percentage}%`;
   }
   
+  // Failure / Damage 
   function handleFailure(message) {
     inputEl.disabled = true;
     document.getElementById("game-log").textContent = message;
+  
     if (!playerTurn) playerHP -= 10;
   
     if (playerHP <= 0) {
@@ -262,6 +322,7 @@ const promptPoolAttack = {
   
   function enemyAttack() {
     if (!playerTurn) playerHP -= 15;
+  
     if (playerHP <= 0) {
       document.getElementById("game-log").textContent = "You have been defeated!";
       inputEl.disabled = true;
@@ -273,9 +334,11 @@ const promptPoolAttack = {
     document.getElementById("playerHealth").style.width = playerHP + "%";
   }
   
+  // Stage Announcement 
   function showStageAnnouncement() {
     const announcement = document.getElementById("stage-announcement");
     const gameContainer = document.getElementById("game-container");
+  
     gameContainer.style.display = "none";
     announcement.textContent = `Get ready for Stage ${stage}!`;
     announcement.style.display = "block";
@@ -286,5 +349,6 @@ const promptPoolAttack = {
       resetStage();
     }, 3000);
   }
+  
   
   
