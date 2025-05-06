@@ -119,6 +119,13 @@ const promptPoolAttack = {
     inputEl.focus();
     document.getElementById("pause-screen").style.display = "none";
   }
+
+  function exitGame(){
+    document.getElementById("start-screen").style.display = "block";
+    document.getElementById("game-container").style.display = "none";
+    //document.getElementById("pause-screen").style.display = "none";
+
+  }
   
   // Stage Setup 
   function resetStage() {

@@ -81,6 +81,23 @@
       justify-content: center;
       flex-direction: column;
     }
+    #exit-button {
+      position: absolute;
+      top: 50px;
+      right: -40px;
+      padding: 6px 12px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      z-index: 1001;
+    }
+    #exit-button:hover{
+      background-color: #666;
+    }
+
   </style>
 </head>
 
@@ -98,6 +115,8 @@
   <div id="game-container" style="display: none; position: relative;">
 
     <button id="pause-button" onclick="pauseGame()">Pause</button>
+    <button id="exit-button" onclick="exitGame()">Exit to Main Menu</button>
+
 
     <p><strong>Stage:</strong> <span id="stageNumber">1</span></p>
     <p><strong>Score:</strong> <span id="score">0</span></p>
