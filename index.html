@@ -67,7 +67,7 @@
     }
 
     #pause-screen {
-      display: none; /* Starts hidden */
+      display: none; 
       position: fixed;
       top: 0;
       left: 0;
@@ -95,14 +95,15 @@
   </div>
 
   <!-- Game Screen -->
-  <div id="game-container" style="display: none;">
+  <div id="game-container" style="display: none; position: relative;">
 
     <button id="pause-button" onclick="pauseGame()">Pause</button>
-    
+
     <p><strong>Stage:</strong> <span id="stageNumber">1</span></p>
     <p><strong>Score:</strong> <span id="score">0</span></p>
 
     <div id="character-area">
+        
       <div class="character" id="player-area">
         <img id="playerSprite" src="assets/avatar/player_idle.png" width="100" alt="Player" />
         <div class="bar-container">
