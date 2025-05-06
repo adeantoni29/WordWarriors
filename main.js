@@ -11,8 +11,16 @@ const promptPoolAttack = {
     hard: ["reposition", "lunge"],
     insane: ["fortification", "circumvent"]
   };
-  
+
+  const promptPoolUnlock1 = {
+    easy: ["heal", "mend"],
+    medium: ["repair", "recover"],
+    hard: ["replenish", "regenerate"],
+    insane: ["rejuvenate", "revitalize"]
+  };
+
   let currentPrompt = "";
+  let promptUnlock1 = "";
   let timer = null;
   let storedPromptTimer = null;
   let inputEl = null;
@@ -203,6 +211,13 @@ const promptPoolAttack = {
       ? `Fight the enemy! Type: "${currentPrompt}"`
       : `Defend yourself! Type: "${currentPrompt}"`;
   
+    // Unlocked Abilities
+    if (stage > 1 && playerTurn) {
+      const poolUnlock1 = promptPoolUnlock1[difficulty];
+      promptUnlock1 = poolUnlock1[Math.floor(Math.random() * poolUnlock1.length)];
+      document.getElementById("promptText").innerHTML += `<br>Use a healing potion! Type: "${promptUnlock1}"`;
+    }
+
     document.getElementById("game-log").textContent = "";
     inputEl.value = "";
     inputEl.disabled = false;
@@ -255,6 +270,13 @@ const promptPoolAttack = {
       } else {
         nextPrompt();
       }
+    }
+
+    if (stage > 1 && playerTurn && typed === promptUnlock1) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      healingPotion();
     }
   }
   
@@ -330,6 +352,16 @@ const promptPoolAttack = {
     updateBars();
   }
   
+  function healingPotion() {
+    playerHP += 10;
+  
+    if (playerHP > 100) {
+      playerHP = 100;
+    }
+    updateBars();
+    nextPrompt();
+  }
+
   function updateBars() {
     document.getElementById("playerHealth").style.width = playerHP + "%";
   }
