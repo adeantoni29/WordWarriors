@@ -121,9 +121,17 @@ const promptPoolAttack = {
   }
 
   function exitGame(){
+   
+
     document.getElementById("start-screen").style.display = "block";
     document.getElementById("game-container").style.display = "none";
-    //document.getElementById("pause-screen").style.display = "none";
+    document.getElementById("pause-screen").style.display = "none";
+    resetStage();
+   
+    if (!isPaused) return;
+    isPaused = false;
+  
+  
 
   }
   
