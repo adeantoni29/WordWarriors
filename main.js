@@ -24,6 +24,9 @@ const promptPoolAttack = {
   let boss = null;
   let playerTurn = false;
   let isPaused = false;
+
+  let now,dt,
+    last = timestamp()
   
   //  Timer Class 
   class PromptTimer {
@@ -72,11 +75,33 @@ const promptPoolAttack = {
     document.getElementById("game-container").style.display = "block";
     startGame();
   }
+  function timestamp() {
+    return window.performance && window.performance.now ? window.performance.now() : new Date().getTime;
+  }
   
   function loadGame() {
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
-    startGame();
+    update();
+    render();
+    requestAnimationFrame(frame);
+    if (storedPromptTimer && storedPromptTimer.start) {
+      timer = storedPromptTimer;
+      timer.start();
+    }
+    resetStage();
+  }
+
+  function frame() {
+    now = timestamp();
+    dt = dt + Math.min(1, (now - last) / 1000);
+      while(dt > step) {
+        dt = dt - step;
+        update(dt);
+      }
+    render(dt);
+    last = now;
+    requestAnimationFrame(frame);
   }
   
   function startGame() {
@@ -121,8 +146,6 @@ const promptPoolAttack = {
   }
 
   function exitGame(){
-   
-
     document.getElementById("start-screen").style.display = "block";
     document.getElementById("game-container").style.display = "none";
     document.getElementById("pause-screen").style.display = "none";
@@ -130,8 +153,6 @@ const promptPoolAttack = {
    
     if (!isPaused) return;
     isPaused = false;
-  
-  
 
   }
   
