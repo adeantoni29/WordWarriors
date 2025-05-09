@@ -46,7 +46,7 @@ input[type="text"] {
 button {
     font-size: 1rem;
     padding: 10px 20px;
-    background-color: #ff5050;
+    background-color: #674213;
     border: none;
     color: white;
     border-radius: 5px;
@@ -55,7 +55,7 @@ button {
 }
 
 button:hover {
-    background-color: #e03e3e;
+    background-color: #3a250c;
 }
 
 #game-log {
