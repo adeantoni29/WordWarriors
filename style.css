@@ -33,6 +33,7 @@ h1 {
     font-weight: bold;
     color: #2d1600;
     padding-bottom: 30px;
+    
 }
 #scroll-message {
     max-width: 25ch;
@@ -79,3 +80,10 @@ input[type="text"] {
     background-image: url("assets/images/load_game_hover.png");
     background-color: transparent;
 }
+
+#pause-button:hover,
+#exit-button:hover {
+    background-color: #666;
+}
+
+
