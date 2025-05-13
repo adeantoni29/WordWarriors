@@ -109,7 +109,7 @@ const promptPoolAttack = {
     inputEl.addEventListener("input", handleTyping);
   
     document.addEventListener("keydown", (e) => {
-      if (e.key === "p" || e.key === "P") {
+      if (e.key === "z" || e.key === "Z") {
         isPaused ? resumeGame() : pauseGame();
       }
     });
