@@ -64,7 +64,7 @@ input[type="text"] {
 }
 
 .new-game {
-    background-image: url("assets/images/New_game.png");
+    background-image: url("assets/images/New_Game.png");
 }
 
 .new-game:hover {
