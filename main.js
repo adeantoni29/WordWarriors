@@ -1,7 +1,7 @@
 const promptPoolAttack = { // Basic Attack
     easy: ["slash", "jab"],
     medium: ["parry", "strike"],
-    hard: ["counterattack", "intercept"],
+    hard: ["assault", "intercept"],
     insane: ["disengagement", "retribution"]
   };
   
@@ -17,6 +17,34 @@ const promptPoolAttack = { // Basic Attack
     medium: ["repair", "recover"],
     hard: ["replenish", "regenerate"],
     insane: ["rejuvenate", "revitalize"]
+  };
+
+  const promptPoolUnlock2 = { // Counterattack
+    easy: ["todo", "todo"],
+    medium: ["todo", "todo"],
+    hard: ["todo", "todo"],
+    insane: ["todo", "todo"]
+  };
+
+  const promptPoolUnlock3 = { // Wide Slash
+    easy: ["todo", "todo"],
+    medium: ["todo", "todo"],
+    hard: ["todo", "todo"],
+    insane: ["todo", "todo"]
+  };
+
+  const promptPoolUnlock4 = { // Ice Spell
+    easy: ["todo", "todo"],
+    medium: ["todo", "todo"],
+    hard: ["todo", "todo"],
+    insane: ["todo", "todo"]
+  };
+
+  const promptPoolUnlock5 = { // Agility Potion
+    easy: ["todo", "todo"],
+    medium: ["todo", "todo"],
+    hard: ["todo", "todo"],
+    insane: ["todo", "todo"]
   };
 
   const bossNames = ["Korgath", "SkullDoom", "Frost Fang", "Vexmorra the Serpent Queen", "Blaze Fiend", "Lord Shadowbane", "Skarnath Hellborn"];
@@ -259,6 +287,26 @@ const promptPoolAttack = { // Basic Attack
       promptUnlock1 = poolUnlock1[Math.floor(Math.random() * poolUnlock1.length)];
       document.getElementById("promptText").innerHTML += `<br>Use a healing potion! Type: "${promptUnlock1}"`;
     }
+    if (stage > 2 && !playerTurn) {
+      const poolUnlock2 = promptPoolUnlock2[difficulty];
+      promptUnlock2 = poolUnlock2[Math.floor(Math.random() * poolUnlock2.length)];
+      document.getElementById("promptText").innerHTML += `<br>Counter the enemy's attack! Type: "${promptUnlock2}"`;
+    }
+    if (stage > 3 && playerTurn) {
+      const poolUnlock3 = promptPoolUnlock3[difficulty];
+      promptUnlock3 = poolUnlock3[Math.floor(Math.random() * poolUnlock3.length)];
+      document.getElementById("promptText").innerHTML += `<br>Use a wide slash! Type: "${promptUnlock3}"`;
+    }
+    if (stage > 4 && playerTurn) {
+      const poolUnlock4 = promptPoolUnlock4[difficulty];
+      promptUnlock4 = poolUnlock4[Math.floor(Math.random() * poolUnlock4.length)];
+      document.getElementById("promptText").innerHTML += `<br>Use an ice spell! Type: "${promptUnlock4}"`;
+    }
+    if (stage > 5 && playerTurn) {
+      const poolUnlock5 = promptPoolUnlock5[difficulty];
+      promptUnlock5 = poolUnlock5[Math.floor(Math.random() * poolUnlock5.length)];
+      document.getElementById("promptText").innerHTML += `<br>Use an agility potion! Type: "${promptUnlock5}"`;
+    }
 
     document.getElementById("game-log").textContent = "";
     inputEl.value = "";
@@ -314,11 +362,36 @@ const promptPoolAttack = { // Basic Attack
       }
     }
 
+    // Unlocked Abilities
     if (stage > 1 && playerTurn && typed === promptUnlock1) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
       healingPotion();
+    }
+    if (stage > 2 && !playerTurn && typed === promptUnlock2) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      counterAttack();
+    }
+    if (stage > 3 && playerTurn && typed === promptUnlock3) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      wideSlash();
+    }
+    if (stage > 4 && playerTurn && typed === promptUnlock4) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      iceSpell();
+    }
+    if (stage > 5 && playerTurn && typed === promptUnlock5) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      agilityPotion();
     }
   }
   
@@ -394,7 +467,7 @@ const promptPoolAttack = { // Basic Attack
     updateBars();
   }
   
-  function healingPotion() {
+  function healingPotion() { // Unlocked Ability 1
     playerHP += 10;
   
     if (playerHP > 100) {
@@ -402,6 +475,26 @@ const promptPoolAttack = { // Basic Attack
     }
     updateBars();
     nextPrompt();
+  }
+
+  function counterAttack() { // Unlocked Ability 2
+    // TODO: An attack that can be used during the dodge turn,
+    // only does half the damage of a normal attack
+  }
+
+  function wideSlash() { // Unlocked Ability 3
+    // TODO, an attack that damages all enemies on screen,
+    // damage dealt is normal attack damage divided by the number of enemies
+  }
+
+  function iceSpell() { // Unlocked Ability 4
+    // TODO, damage an enemy and stops them from attacking during the next dodge turn,
+    // also does extra damage against Stage 5's boss
+  }
+
+  function agilityPotion() { // Unlocked Ability 5
+    // TODO, doubles the time limit for each turn,
+    // can only be used once
   }
 
   function updateBars() {
