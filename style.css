@@ -20,9 +20,9 @@ h1 {
     background-size: contain;        
     background-repeat: no-repeat;
     background-position: center;
-    width: 900px;                    
-    height: 800px;                   
-    margin: 0px auto 30px;
+    width: 1200px;                    
+    height: 700px;                   
+    margin: 5px auto 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,7 +32,12 @@ h1 {
     font-family: 'Georgia', serif;
     font-weight: bold;
     color: #2d1600;
-  }
+    padding: bottom 30px;
+}
+#scroll-message {
+    max-width: 25ch;
+}
+
 
 input[type="text"] {
     padding: 10px;
