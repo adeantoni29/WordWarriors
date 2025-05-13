@@ -11,6 +11,8 @@ const promptPoolAttack = {
     hard: ["reposition", "lunge"],
     insane: ["fortification", "circumvent"]
   };
+
+  const bossNames = ["Korgath", "SkullDoom", "Frost Fang", "Vexmorra the Serpent Queen", "Blaze Fiend", "Lord Shadowbane", "Skarnath Hellborn"];
   
   let currentPrompt = "";
   let timer = null;
@@ -166,7 +168,7 @@ const promptPoolAttack = {
   
     const bossSprite = `assets/avatar/boss_${stage}_idle.png`;
     document.getElementById("bossSprite").src = bossSprite;
-    document.getElementById("bossLabel").textContent = `Boss ${stage}`;
+    document.getElementById("bossLabel").textContent = `${bossNames[stage-1]}`;
     boss = {
       hp: stage + 1,
       maxHp: stage + 1

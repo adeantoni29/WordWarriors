@@ -8,7 +8,6 @@ body {
 }
 #game-title {
     padding-top:100px;
-    border: 3px solid red;
 }
 
 h1 {
@@ -38,7 +37,6 @@ h1 {
     font-weight: bold;
     color: #2d1600;
     padding-bottom: 30px;
-    border: 3px greenyellow solid;
     
 }
 input[type="text"] {
