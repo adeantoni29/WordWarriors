@@ -20,7 +20,7 @@ h1 {
     background-size: contain;        
     background-repeat: no-repeat;
     background-position: center;
-    width: 1200px;                    
+    width: 900px;                    
     height: 800px;                   
     margin: 0px auto 30px;
     display: flex;
@@ -43,22 +43,34 @@ input[type="text"] {
     border: none;
 }
 
-button {
-    font-size: 1rem;
-    padding: 10px 20px;
-    background-color: #674213;
+.new-game,
+.load-game {
+    width: 240px;
+    height: 80px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     border: none;
-    color: white;
-    border-radius: 5px;
     cursor: pointer;
     margin: 10px;
+    padding: 0;
+    background-color: transparent;
 }
 
-button:hover {
-    background-color: #3a250c;
+.new-game {
+    background-image: url("assets/images/new_game.png");
 }
 
-#game-log {
-    margin-top: 20px;
-    font-style: italic;
+.new-game:hover {
+    background-image: url("assets/images/new_game_hover.png");
+    background-color: transparent;
+}
+
+.load-game {
+    background-image: url("assets/images/Load_Game.png");
+}
+
+.load-game:hover {
+    background-image: url("assets/images/load_game_hover.png");
+    background-color: transparent;
 }
