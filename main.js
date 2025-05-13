@@ -88,6 +88,19 @@ const promptPoolAttack = { // Basic Attack
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
     startGame();
+     
+  const savedGameData = loadSavedGameData();
+  if (savedGameData) {
+    
+    playerHP = savedGameData.playerHP;
+    score = savedGameData.score;
+    stage = savedGameData.stage;
+    
+    resetStage();
+    render();
+  } else {
+    console.log("No saved game found");
+  }
   }
   function timestamp() {
     return window.performance && window.performance.now ? window.performance.now() : new Date().getTime;
