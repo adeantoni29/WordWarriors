@@ -140,11 +140,8 @@ const promptPoolAttack = { // Basic Attack
     update();
     render();
     requestAnimationFrame(frame);
-    if (storedPromptTimer && storedPromptTimer.start) {
-      timer = storedPromptTimer;
-      timer.start();
-    }
     resetStage();
+
   }
 
   function frame() {
@@ -160,6 +157,7 @@ const promptPoolAttack = { // Basic Attack
   }
   
   function startGame() {
+    stage = 1;
     inputEl = document.getElementById("commandInput");
     inputEl.addEventListener("input", handleTyping);
   
