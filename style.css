@@ -9,7 +9,9 @@ body {
 #game-title {
     padding-top:100px;
 }
-
+#ability-announcement-screen{
+    border: 3px solid red;
+}
 h1 {
     font-size: 3rem;
 }

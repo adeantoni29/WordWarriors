@@ -287,10 +287,12 @@ function nextStage() {
 
 // Function to show the stage announcement after defeating a boss
 function showStageAnnouncement() {
+    const screen = document.getElementById("ability-announcement-screen");
     const announcement = document.getElementById("stage-announcement");
     const countdownDisplay = document.getElementById("countdown-display"); // For visual countdown
     const gameContainer = document.getElementById("game-container");
 
+    screen.style.display = "block";
     gameContainer.style.display = "none"; // Hide game container
     announcement.textContent = `Get ready for Stage ${stage}!`; // Announce the new stage
     announcement.style.display = "block"; // Show the stage announcement
@@ -305,6 +307,7 @@ function showStageAnnouncement() {
         if (countdown < 0) {
             clearInterval(countdownInterval); // Stop the countdown when it reaches 0
             // Hide the countdown and proceed to the next stage
+            screen.style.display = "none";
             countdownDisplay.style.display = "none";
             announcement.style.display = "none";
             gameContainer.style.display = "block"; // Show the game container
