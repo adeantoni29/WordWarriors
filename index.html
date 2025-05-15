@@ -174,8 +174,17 @@
     <p id="game-log"></p>
   </div>
 
+  <!-- Ability Announcement Screen -->
+<div id="ability-announcement-screen" style="display: none; text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;">
+    <div id="ability-announcement"></div> <!-- Ability message -->
+    <img id="ability-image" style="display: none; width: 100px; height: 100px; margin-top: 20px;" alt="Ability Image"> <!-- Ability image -->
+    <p id="ability-description" style="display: none; text-align: center; font-size: 16px; margin-top: 10px;"></p> <!-- Ability description -->
+    <button id="next-stage-button" onclick="nextStage()" style="margin-top: 20px;">Next Stage</button>
+</div>
+
   <!-- Stage Announcement -->
   <div id="stage-announcement" style="display: none; text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;"></div>
+  <div id="countdown-display" style="display: none; text-align: center; font-size: 48px; font-weight: bold; color: rgb(255, 255, 255);"></div>
 
   <!-- Pause Screen -->
   <div id="pause-screen">

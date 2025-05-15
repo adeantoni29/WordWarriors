@@ -227,12 +227,99 @@ const promptPoolAttack = { // Basic Attack
 
   }
   
+  // TODO perfect ability screen
+
+  let currentStage = 1; // Start at stage 1
+
+const abilities = [
+    {
+        message: "Healing Potion Activated!",
+        image: "healing_potion.png", 
+        description: "(insert description)."
+    },
+    {
+        message: "Counter Attack Ready!",
+        image: "counter_attack.png",
+        description: "(insert description)."
+    },
+    {
+        message: "Wide Slash Ready!",
+        image: "wide_slash.png", 
+        description: "(insert description)."
+    },
+    {
+        message: "Ice spell Unlocked!", 
+        image: "ice_spell.png",  
+        description: "(insert description)."
+    },
+    {
+        message: "Agility Potion Active!",
+        image: "ice_spell.png",  
+        description: "(insert description/ ice spell is in here until agiloty potion image is generated!)."
+    }
+];
+
+function showAbilityAnnouncement() {
+    const announcement = document.getElementById("ability-announcement");
+    const abilityImage = document.getElementById("ability-image");
+    const abilityDescription = document.getElementById("ability-description");
+    const announcementScreen = document.getElementById("ability-announcement-screen");
+
+    // Get the ability for the current stage
+    const ability = abilities[currentStage - 1];
+
+    // Update the announcement message
+    announcement.textContent = ability.message;
+    abilityImage.src = ability.image; // Set the image source
+    abilityDescription.textContent = ability.description;
+
+    // Make the ability screen visible
+    announcementScreen.style.display = "block"; // Show the ability announcement screen
+}
+
+// Move to the next stage when the "Next Stage" button is clicked
+function nextStage() {
+    if (currentStage < abilities.length) {
+        currentStage++; // Increase the stage number for the next ability
+        showStageAnnouncement(); // Show the next ability's announcement
+    }
+}
+
+// Function to show the stage announcement after defeating a boss
+function showStageAnnouncement() {
+    const announcement = document.getElementById("stage-announcement");
+    const countdownDisplay = document.getElementById("countdown-display"); // For visual countdown
+    const gameContainer = document.getElementById("game-container");
+
+    gameContainer.style.display = "none"; // Hide game container
+    announcement.textContent = `Get ready for Stage ${stage}!`; // Announce the new stage
+    announcement.style.display = "block"; // Show the stage announcement
+    countdownDisplay.style.display = "block"; // Show countdown timer
+
+    let countdown = 3; // Start countdown from 3 seconds
+
+    // Update the countdown display every second
+    const countdownInterval = setInterval(() => {
+        countdownDisplay.textContent = countdown; // Display the countdown number
+        countdown--; // Decrease countdown by 1
+        if (countdown < 0) {
+            clearInterval(countdownInterval); // Stop the countdown when it reaches 0
+            // Hide the countdown and proceed to the next stage
+            countdownDisplay.style.display = "none";
+            announcement.style.display = "none";
+            gameContainer.style.display = "block"; // Show the game container
+            resetStage(); // Reset the stage for the next round
+        }
+    }, 1000); // Update every 1 second
+}
+
   // Stage Setup 
   function resetStage() {
     document.getElementById("stageNumber").textContent = stage;
     document.getElementById("score").textContent = score;
   
-    playerHP = 100;
+    //dont reset player health
+    //playerHP = 100;
     updateBars();
   
     const bossSprite = `assets/avatar/boss_${stage}_idle.png`;
@@ -530,21 +617,7 @@ const promptPoolAttack = { // Basic Attack
     document.getElementById("playerHealth").style.width = playerHP + "%";
   }
   
-  // Stage Announcement 
-  function showStageAnnouncement() {
-    const announcement = document.getElementById("stage-announcement");
-    const gameContainer = document.getElementById("game-container");
-  
-    gameContainer.style.display = "none";
-    announcement.textContent = `Get ready for Stage ${stage}!`;
-    announcement.style.display = "block";
-  
-    setTimeout(() => {
-      announcement.style.display = "none";
-      gameContainer.style.display = "block";
-      resetStage();
-    }, 3000);
-  }
+ 
   
   
   
