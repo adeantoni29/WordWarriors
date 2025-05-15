@@ -1,3 +1,21 @@
+// Save game data to localStorage
+function loadSavedGameData() {
+    const savedData = localStorage.getItem('savedGame');
+    if (savedData) {
+        return JSON.parse(savedData); // Return parsed saved game data
+    }
+    return null; // Return null if no saved data exists
+}
+
+// Save game data to localStorage
+function saveGameData() {
+    const gameData = {
+        playerHP: playerHP,
+        score: score,
+        stage: stage
+    };
+    localStorage.setItem('savedGame', JSON.stringify(gameData)); // Save as string
+}
 const promptPoolAttack = { // Basic Attack
     easy: ["slash", "jab"],
     medium: ["parry", "strike"],
