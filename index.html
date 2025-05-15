@@ -81,6 +81,9 @@
       justify-content: center;
       flex-direction: column;
     }
+    #defeated-screen {
+    border: 3px solid red;
+    }
     #exit-button {
       position: absolute;
       top: 50px;
@@ -170,8 +173,9 @@
       disabled
       onpaste="return false"
     />
-
+  
     <p id="game-log"></p>
+ 
   </div>
 
   <!-- Stage Announcement -->
@@ -181,6 +185,11 @@
   <div id="pause-screen">
     <p>Game Paused</p>
     <button onclick="resumeGame()">Resume</button>
+  </div>
+  <div id="defeated-screen" style="display:none;">
+    <p id="game-log"></p>
+    <button onclick="resetStage()">Retry</button>
+    <button onclick="exitGame()">Exit to Main Menu</button>
   </div>
 
   <!-- Script -->

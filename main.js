@@ -457,6 +457,8 @@ const promptPoolAttack = { // Basic Attack
     if (!playerTurn) playerHP -= 10;
   
     if (playerHP <= 0) {
+      document.getElementById("defeated-screen").style.display = "block";
+      document.getElementById("game-container").style.display = "none";
       document.getElementById("game-log").textContent = "You have been defeated!";
       inputEl.removeEventListener("input", handleTyping);
     } else {
@@ -472,6 +474,7 @@ const promptPoolAttack = { // Basic Attack
     if (!playerTurn) playerHP -= 15;
   
     if (playerHP <= 0) {
+      showDefeatedScreen();
       document.getElementById("game-log").textContent = "You have been defeated!";
       inputEl.disabled = true;
     }
@@ -512,6 +515,13 @@ const promptPoolAttack = { // Basic Attack
     document.getElementById("playerHealth").style.width = playerHP + "%";
   }
   
+  function showDefeatedScreen() {
+    enemyAttack()
+    if (message = "You have been defeated") {
+      document.getElementById("defeated-screen").style.display = "block";
+      document.getElementById("game-log").textContent = "You have been defeated!";
+    }
+  }
   // Stage Announcement 
   function showStageAnnouncement() {
     const announcement = document.getElementById("stage-announcement");
