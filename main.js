@@ -239,6 +239,7 @@ function loadGameFromFile(event) {
         if (timeLeft <= 0) {
             clearInterval(timer);
             handleFailure("Time's up!");
+            if (!playerTurn) enemyAttack();
             document.getElementById("promptTimerBarContainer").style.display = "none";
         }
     }, 100);
@@ -355,8 +356,6 @@ function showStageAnnouncement() {
     announcement.textContent = `Get ready for Stage ${stage}!`; // Announce the new stage
     announcement.style.display = "block"; // Show the stage announcement
     countdownDisplay.style.display = "block"; // Show countdown timer
-
-    saveGameToFile();
 
     let countdown = 3; // Start countdown from 3 seconds
 
@@ -542,6 +541,11 @@ function showStageAnnouncement() {
       document.getElementById("score").textContent = score;
       if (playerTurn) {
         attackEnemyOrBoss(1);
+      
+      document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
+      setTimeout(() => {
+        document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
+      }, 500);
       } else {
         nextPrompt();
       }
@@ -563,6 +567,11 @@ function showStageAnnouncement() {
       score += 1;
       document.getElementById("score").textContent = score;
       attackEnemyOrBoss(0.5);
+      
+      document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
+      setTimeout(() => {
+        document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
+      }, 500);
     }
     if (stage > 3 && playerTurn && typed === promptUnlock3) {
       if (timer && timer.stop) timer.stop();
@@ -571,6 +580,11 @@ function showStageAnnouncement() {
       score += 1;
       document.getElementById("score").textContent = score;
       wideSlash();
+      
+      document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
+      setTimeout(() => {
+        document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
+      }, 500);
     }
     if (stage > 4 && playerTurn && typed === promptUnlock4) {
       if (timer && timer.stop) timer.stop();
@@ -579,6 +593,11 @@ function showStageAnnouncement() {
       score += 1;
       document.getElementById("score").textContent = score;
       iceSpell();
+      
+      document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
+      setTimeout(() => {
+        document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
+      }, 500);
     }
     if (stage > 5 && playerTurn && typed === promptUnlock5) {
       if (timer && timer.stop) timer.stop();
@@ -657,6 +676,20 @@ function showStageAnnouncement() {
   function enemyAttack() {
     if (!playerTurn) playerHP -= 15;
   
+    const target = enemies.find(e => e.hp > 0);
+    if (target) {
+      const enemyIndex = enemies.indexOf(target);
+      document.getElementById(`enemySprite_${enemyIndex}`).src = "assets/avatar/enemy_attack.png";
+      setTimeout(() => {
+        document.getElementById(`enemySprite_${enemyIndex}`).src = "assets/avatar/enemy_idle.png";
+      }, 500);
+    } else {
+      document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_attack.png`;
+      setTimeout(() => {
+        document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_idle.png`;
+      }, 500);
+    }
+
     if (playerHP <= 0) {
       showDefeatedScreen();
       document.getElementById("game-log").textContent = "You have been defeated!";
