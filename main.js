@@ -17,8 +17,6 @@ function saveGameData() {
     localStorage.setItem('savedGame', JSON.stringify(gameData)); // Save as string
 }
 
-
-
 function saveGameToFile() {
     const gameData = {
         playerHP: playerHP,
@@ -201,6 +199,7 @@ function loadGameFromFile(event) {
   function loadGame() {
     document.getElementById("game-title").style.display = "none";
     document.getElementById("start-screen").style.display = "none";
+    document.getElementById("defeated-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
     update();
     render();
