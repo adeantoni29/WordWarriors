@@ -7,7 +7,8 @@ body {
     
 }
 #game-title {
-    padding-top:100px;
+    padding-top:25px;
+    width: min(75vw, 800px);
 }
 #ability-announcement-screen{
     border: 3px solid red;
@@ -23,12 +24,12 @@ h1 {
 
 .scroll-text {
     background-image: url("assets/images/Scroll.png");
-    background-size: contain;        
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    width: 1200px;                    
-    height: 700px;                   
-    margin: 5px auto 30px;
+    width: 100vw;
+    height: 700px;
+    margin: 0px auto 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,6 +38,7 @@ h1 {
     box-sizing: border-box;
     font-family: 'Georgia', serif;
     font-weight: bold;
+    font-size: min(2.5vw, 18px);
     color: #2d1600;
     padding-bottom: 30px;
     
@@ -95,4 +97,8 @@ input[type="text"] {
     margin-top: 20px;
   }
 
+#loadGameButton {
+    opacity: 0.5;
+    pointer-events: none;
+}
 

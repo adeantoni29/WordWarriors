@@ -16,7 +16,60 @@ function saveGameData() {
     };
     localStorage.setItem('savedGame', JSON.stringify(gameData)); // Save as string
 }
-const promptPoolAttack = { // Basic Attack
+
+
+
+function saveGameToFile() {
+    const gameData = {
+        playerHP: playerHP,
+        score: score,
+        stage: stage
+    };
+
+    let fileName = prompt("Save your progress?", "saved_game.json");
+    if (!fileName) return; // If canceled, don't save
+
+    const blob = new Blob([JSON.stringify(gameData, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName; // Use the custom filename
+    a.click();
+}
+function enableLoadButton(event) {
+    const file = event.target.files[0]; 
+    const loadButton = document.getElementById("loadGameButton");
+
+    if (file) {
+        loadButton.style.opacity = "1"; // Make it fully visible
+        loadButton.style.pointerEvents = "auto"; // Allow clicking
+        loadButton.disabled = false; // Enable the button
+    } else {
+        loadButton.style.opacity = "0.5"; // Keep it faded
+        loadButton.style.pointerEvents = "none"; // Prevent interaction
+        loadButton.disabled = true;
+    }
+}
+function loadGameFromFile(event) {
+    if (!inputEl) inputEl = document.getElementById("commandInput");
+    const fileInput = document.getElementById("loadGameFile");
+    const file = fileInput.files[0];
+    if (!file) return; // Prevent loading if no file is selected
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const loadedData = JSON.parse(e.target.result);
+        playerHP = loadedData.playerHP;
+        score = loadedData.score;
+        stage = loadedData.stage;
+
+        resetStage();
+        document.getElementById("start-screen").style.display = "none";
+        document.getElementById("game-container").style.display = "block";
+        console.log("Game loaded successfully!");
+    };
+    reader.readAsText(file);
+}
+  const promptPoolAttack = { // Basic Attack
     easy: ["slash", "jab"],
     medium: ["parry", "strike"],
     hard: ["assault", "intercept"],
@@ -38,31 +91,31 @@ const promptPoolAttack = { // Basic Attack
   };
 
   const promptPoolUnlock2 = { // Counterattack
-    easy: ["todo", "todo"],
-    medium: ["todo", "todo"],
-    hard: ["todo", "todo"],
-    insane: ["todo", "todo"]
+    easy: ["retort", "rebut"],
+    medium: ["thrust", "disarm"],
+    hard: ["quell", "rebuke"],
+    insane: ["repel", "obliterate"]
   };
 
   const promptPoolUnlock3 = { // Wide Slash
-    easy: ["todo", "todo"],
-    medium: ["todo", "todo"],
-    hard: ["todo", "todo"],
-    insane: ["todo", "todo"]
+    easy: ["swipe", "carve"],
+    medium: ["hack", "slice"],
+    hard: ["flay", "bisect"],
+    insane: ["eradicate", "rupture"]
   };
 
   const promptPoolUnlock4 = { // Ice Spell
-    easy: ["todo", "todo"],
-    medium: ["todo", "todo"],
-    hard: ["todo", "todo"],
-    insane: ["todo", "todo"]
+    easy: ["cool", "solidify"],
+    medium: ["hoarfrost", "encase"],
+    hard: ["glaciate", "subzero"],
+    insane: ["immobilize", "frostbite"]
   };
 
   const promptPoolUnlock5 = { // Agility Potion
-    easy: ["todo", "todo"],
-    medium: ["todo", "todo"],
-    hard: ["todo", "todo"],
-    insane: ["todo", "todo"]
+    easy: ["hasten", "leap"],
+    medium: ["phase", "warp"],
+    hard: ["glide", "surpass"],
+    insane: ["evanesce", "maneuver"]
   };
 
   const bossNames = ["Korgath", "SkullDoom", "Frost Fang", "Vexmorra the Serpent Queen", "Blaze Fiend", "Lord Shadowbane", "Skarnath Hellborn"];
@@ -84,7 +137,12 @@ const promptPoolAttack = { // Basic Attack
   let boss = null;
   let playerTurn = false;
   let isPaused = false;
-
+  let agilityUsed = false;
+  let timerBar = null;
+  let totalTime = 0;
+  let timerStartTime = 0;
+  let remainingTime = 0;
+  
   let now,dt,
     last = timestamp()
   
@@ -131,28 +189,17 @@ const promptPoolAttack = { // Basic Attack
   
   //  Game Start 
   function newGame() {
+    document.getElementById("game-title").style.display = "none";
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
     startGame();
-     
-  const savedGameData = loadSavedGameData();
-  if (savedGameData) {
-    
-    playerHP = savedGameData.playerHP;
-    score = savedGameData.score;
-    stage = savedGameData.stage;
-    
-    resetStage();
-    render();
-  } else {
-    console.log("No saved game found");
-  }
   }
   function timestamp() {
     return window.performance && window.performance.now ? window.performance.now() : new Date().getTime;
   }
   
   function loadGame() {
+    document.getElementById("game-title").style.display = "none";
     document.getElementById("start-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
     update();
@@ -176,51 +223,62 @@ const promptPoolAttack = { // Basic Attack
   
   function startGame() {
     stage = 1;
-    inputEl = document.getElementById("commandInput");
-    inputEl.addEventListener("input", handleTyping);
-  
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "z" || e.key === "Z") {
-        isPaused ? resumeGame() : pauseGame();
-      }
-    });
-  
+
+    playerHP = 100;
+    updateBars();
     resetStage();
   }
-  
+
+  function startTimer() {
+    if (timer) clearInterval(timer);
+
+    timer = setInterval(() => {
+        let elapsed = Date.now() - timerStartTime;
+        let timeLeft = remainingTime - elapsed;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            handleFailure("Time's up!");
+            document.getElementById("promptTimerBarContainer").style.display = "none";
+        }
+    }, 100);
+  }
+
   //  Pause / Resume 
   function pauseGame() {
-    if (isPaused) return;
-    isPaused = true;
-  
-    if (timer && timer.stop) {
-      storedPromptTimer = timer;
-      timer.stop();
-    }
-  
-    inputEl.disabled = true;
-    document.getElementById("pause-screen").style.display = "flex";
+      if (isPaused || !timer) return;
+      isPaused = true;
+
+      clearInterval(timer);
+
+      remainingTime -= Date.now() - timerStartTime;
+
+      inputEl.disabled = true;
+      document.getElementById("pause-screen").style.display = "flex";
+
+      timerBar.style.transition = "none";
+      timerBar.style.width = ((remainingTime / totalTime) * 100) + "%";
   }
-  
+
   function resumeGame() {
-    if (!isPaused) return;
-    isPaused = false;
-  
-    if (storedPromptTimer && storedPromptTimer.start) {
-      timer = storedPromptTimer;
-      timer.start();
-    }
-  
-    inputEl.disabled = false;
-    inputEl.focus();
-    document.getElementById("pause-screen").style.display = "none";
+      if (!isPaused) return;
+      isPaused = false;
+
+      inputEl.disabled = false;
+      document.getElementById("pause-screen").style.display = "none";
+    
+      timerStartTime = Date.now();
+      startTimer();
+
+      timerBar.style.transition = "width " + remainingTime + "ms linear";
+      timerBar.style.width = "0%";
   }
 
   function exitGame(){
+    document.getElementById("game-title").style.display = "block";
     document.getElementById("start-screen").style.display = "block";
     document.getElementById("game-container").style.display = "none";
     document.getElementById("pause-screen").style.display = "none";
-    resetStage();
    
     if (!isPaused) return;
     isPaused = false;
@@ -298,6 +356,8 @@ function showStageAnnouncement() {
     announcement.style.display = "block"; // Show the stage announcement
     countdownDisplay.style.display = "block"; // Show countdown timer
 
+    saveGameToFile();
+
     let countdown = 3; // Start countdown from 3 seconds
 
     // Update the countdown display every second
@@ -318,9 +378,19 @@ function showStageAnnouncement() {
 
   // Stage Setup 
   function resetStage() {
+    document.getElementById("game-title").style.display = "none";
     document.getElementById("stageNumber").textContent = stage;
     document.getElementById("score").textContent = score;
   
+    inputEl = document.getElementById("commandInput");
+    inputEl.addEventListener("input", handleTyping);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        isPaused ? resumeGame() : pauseGame();
+    }
+    });
+
     //dont reset player health
     //playerHP = 100;
     updateBars();
@@ -374,7 +444,7 @@ function showStageAnnouncement() {
       healthContainer.appendChild(healthBar);
       enemyDiv.appendChild(img);
       enemyDiv.appendChild(healthContainer);
-      enemyDiv.appendChild(document.createElement("p")).innerText = `Enemy`;
+      enemyDiv.appendChild(document.createElement("p")).innerText = `Skeleton Minion`;
   
       enemiesContainer.appendChild(enemyDiv);
       enemy.element = enemyDiv;
@@ -421,7 +491,7 @@ function showStageAnnouncement() {
       promptUnlock4 = poolUnlock4[Math.floor(Math.random() * poolUnlock4.length)];
       document.getElementById("promptText").innerHTML += `<br>Use an ice spell! Type: "${promptUnlock4}"`;
     }
-    if (stage > 5 && playerTurn) {
+    if (stage > 5 && playerTurn && !agilityUsed) {
       const poolUnlock5 = promptPoolUnlock5[difficulty];
       promptUnlock5 = poolUnlock5[Math.floor(Math.random() * poolUnlock5.length)];
       document.getElementById("promptText").innerHTML += `<br>Use an agility potion! Type: "${promptUnlock5}"`;
@@ -432,36 +502,30 @@ function showStageAnnouncement() {
     inputEl.disabled = false;
     inputEl.focus();
   
+    if (timer) {
+        clearTimeout(timer); 
+    }
+
     const baseTime = 4000;
     const timePerCharacter = 300;
     const stageBonus = stage * 200;
-    const totalTime = baseTime + currentPrompt.length * timePerCharacter + stageBonus;
+    totalTime = baseTime + (currentPrompt.length * timePerCharacter) + stageBonus;
   
+    timerStartTime = Date.now();
+    remainingTime = totalTime; 
+
     const barContainer = document.getElementById("promptTimerBarContainer");
-    const timerBar = document.getElementById("promptTimerBar");
+    timerBar = document.getElementById("promptTimerBar");
     barContainer.style.display = "block";
     timerBar.style.transition = "none";
     timerBar.style.width = "100%";
   
-    if (timer && timer.stop) timer.stop();
-  
     setTimeout(() => {
       timerBar.style.transition = `width ${totalTime}ms linear`;
+      timerBar.style.width = "0%";
     }, 50);
-  
-    timer = new PromptTimer(
-      totalTime,
-      () => {
-        handleFailure("Time's up!");
-        if (!playerTurn) enemyAttack();
-        barContainer.style.display = "none";
-      },
-      (remaining) => {
-        timerBar.style.width = `${remaining * 100}%`;
-      }
-    );
-  
-    timer.start();
+
+    startTimer();
   }
   
   //  Typing Handler
@@ -474,8 +538,10 @@ function showStageAnnouncement() {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
+      score += 1;
+      document.getElementById("score").textContent = score;
       if (playerTurn) {
-        attackEnemyOrBoss();
+        attackEnemyOrBoss(1);
       } else {
         nextPrompt();
       }
@@ -486,40 +552,50 @@ function showStageAnnouncement() {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
+      score += 1;
+      document.getElementById("score").textContent = score;
       healingPotion();
     }
     if (stage > 2 && !playerTurn && typed === promptUnlock2) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      counterAttack();
+      score += 1;
+      document.getElementById("score").textContent = score;
+      attackEnemyOrBoss(0.5);
     }
     if (stage > 3 && playerTurn && typed === promptUnlock3) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
+      score += 1;
+      document.getElementById("score").textContent = score;
       wideSlash();
     }
     if (stage > 4 && playerTurn && typed === promptUnlock4) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
+      score += 1;
+      document.getElementById("score").textContent = score;
       iceSpell();
     }
     if (stage > 5 && playerTurn && typed === promptUnlock5) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
+      score += 1;
+      document.getElementById("score").textContent = score;
       agilityPotion();
     }
   }
   
   //  Attack Logic 
-  function attackEnemyOrBoss() {
+  function attackEnemyOrBoss(damage) {
     const target = enemies.find(e => e.hp > 0);
   
     if (target) {
-      target.hp--;
+      target.hp -= damage;
       const enemyIndex = enemies.indexOf(target);
   
       if (target.hp <= 0) {
@@ -534,7 +610,7 @@ function showStageAnnouncement() {
       inputEl.disabled = false;
       nextPrompt();
     } else {
-      boss.hp--;
+      boss.hp -= damage;
       if (boss.hp <= 0) {
         document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
         document.getElementById("bossHealth").style.width = "0%";
@@ -599,14 +675,38 @@ function showStageAnnouncement() {
     nextPrompt();
   }
 
-  function counterAttack() { // Unlocked Ability 2
-    // TODO: An attack that can be used during the dodge turn,
-    // only does half the damage of a normal attack
-  }
-
   function wideSlash() { // Unlocked Ability 3
-    // TODO, an attack that damages all enemies on screen,
-    // damage dealt is normal attack damage divided by the number of enemies
+    const targets = enemies.filter(e => e.hp > 0);
+    let damagePerEnemy = (1 / (targets.length + 1)).toFixed(2);
+
+    for (let i = 0; i < targets.length; i++) {
+      targets[i].hp -= damagePerEnemy;
+      const enemyIndex = enemies.indexOf(targets[i]);
+  
+      if (targets[i].hp <= 0) {
+        document.getElementById(`enemySprite_${enemyIndex}`).src = "assets/avatar/enemy_hurt.png";
+        document.getElementById(`enemyHealth_${enemyIndex}`).style.width = "0%";
+      } else {
+        const widthPercent = (targets[i].hp / stage) * 100;
+        document.getElementById(`enemyHealth_${enemyIndex}`).style.width = `${widthPercent}%`;
+      }
+    }
+
+    boss.hp -= damagePerEnemy;
+    if (boss.hp <= 0) {
+      document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
+      document.getElementById("bossHealth").style.width = "0%";
+  
+      setTimeout(() => {
+        stage++;
+        showStageAnnouncement();
+      }, 1000);
+    } else {
+      updateBossBar();
+      inputEl.value = "";
+      inputEl.disabled = false;
+      nextPrompt();
+    }
   }
 
   function iceSpell() { // Unlocked Ability 4

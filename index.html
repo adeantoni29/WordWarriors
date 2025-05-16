@@ -124,8 +124,8 @@
     </div>
 
     <button class="pixel-btn new-game" onclick="newGame()"></button>
-    <button class="pixel-btn load-game" onclick="loadGame()"></button>
-
+    <button class="pixel-btn load-game" id="loadGameButton" onclick="loadGameFromFile(event)" disabled></button>
+    <input type="file" id="loadGameFile" onchange="enableLoadButton(event)">
   </div>
 
   <!-- Game Screen -->
@@ -136,7 +136,7 @@
 
 
     <p><strong>Stage:</strong> <span id="stageNumber">1</span></p>
-    <p><strong>Score:</strong> <span id="score">0</span></p>
+    <p><strong>Prompts Typed:</strong> <span id="score">0</span></p>
 
     <div id="character-area">
         
