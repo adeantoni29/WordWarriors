@@ -380,6 +380,8 @@ function showStageAnnouncement() {
   // Stage Setup 
   function resetStage() {
     document.getElementById("game-title").style.display = "none";
+    document.getElementById("defeated-screen").style.display = "none";
+    document.getElementById("game-container").style.display = "block";
     document.getElementById("stageNumber").textContent = stage;
     document.getElementById("score").textContent = score;
   
@@ -392,8 +394,6 @@ function showStageAnnouncement() {
     }
     });
 
-    //dont reset player health
-    //playerHP = 100;
     updateBars();
   
     const bossSprite = `assets/avatar/boss_${stage}_idle.png`;
@@ -662,8 +662,8 @@ function showStageAnnouncement() {
     if (!playerTurn) playerHP -= 10;
   
     if (playerHP <= 0) {
-      document.getElementById("defeated-screen").style.display = "block";
       document.getElementById("game-container").style.display = "none";
+      document.getElementById("defeated-screen").style.display = "block";
       document.getElementById("game-log").textContent = "You have been defeated!";
       inputEl.removeEventListener("input", handleTyping);
     } else {
@@ -694,7 +694,7 @@ function showStageAnnouncement() {
 
     if (playerHP <= 0) {
       showDefeatedScreen();
-      document.getElementById("game-log").textContent = "You have been defeated!";
+      // document.getElementById("game-log").textContent = "You have been defeated!";
       inputEl.disabled = true;
     }
     updateBars();
@@ -757,6 +757,14 @@ function showStageAnnouncement() {
   function updateBars() {
     document.getElementById("playerHealth").style.width = playerHP + "%";
   }
+
+  function showDefeatedScreen() {
+    if (message == "You have been defeated") {
+      document.getElementById("defeated-screen").style.display = "block";
+      document.getElementById("game-log").textContent = "You have been defeated!";
+    }
+  }
+
   
  
   

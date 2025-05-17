@@ -13,6 +13,7 @@ body {
 #ability-announcement-screen{
     border: 3px solid red;
 }
+
 h1 {
     font-size: 3rem;
 }
@@ -102,3 +103,45 @@ input[type="text"] {
     pointer-events: none;
 }
 
+#exit-button {
+    position: absolute;
+    top: 50px;
+    right: -40px;
+    padding: 6px 12px;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1001;
+}
+#exit-button:hover{
+    background-color: #666;
+}
+#ability-announcement-screen {
+    border: 3px solid red;
+    margin: auto;
+    margin-top: 155px;
+    height: 300px;
+    width: 500px;
+    align-items: center;
+    box-shadow: rgba(226, 226, 233, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+
+}
+
+#defeated-screen {
+    border: 3px solid red;
+    display: none;
+    font-size: 20px;
+    margin: auto;
+    margin-top: 155px;
+    height: 300px;
+    width: 500px;
+    align-items: center;
+    box-shadow: rgba(226, 226, 233, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+p#game-log {
+    text-align: center;
+    margin-top:100px;
+}
