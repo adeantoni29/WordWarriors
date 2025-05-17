@@ -292,29 +292,29 @@ function loadGameFromFile(event) {
 
 const abilities = [
     {
-        message: "Healing Potion Activated!",
-        image: "healing_potion.png", 
+        message: "Healing Potion Unlocked!",
+        image: "assets/images/healing_potion.png", 
         description: "(insert description)."
     },
     {
-        message: "Counter Attack Ready!",
-        image: "counter_attack.png",
+        message: "Counter Attack Unlocked!",
+        image: "assets/images/counter_attack.png",
         description: "(insert description)."
     },
     {
-        message: "Wide Slash Ready!",
-        image: "wide_slash.png", 
+        message: "Wide Slash Unlocked!",
+        image: "assets/images/wide_slash.png", 
         description: "(insert description)."
     },
     {
         message: "Ice spell Unlocked!", 
-        image: "ice_spell.png",  
+        image: "assets/images/ice_spell.png",  
         description: "(insert description)."
     },
     {
-        message: "Agility Potion Active!",
-        image: "ice_spell.png",  
-        description: "(insert description/ ice spell is in here until agiloty potion image is generated!)."
+        message: "Agility Potion Unlocked!",
+        image: "assets/images/agility_potion.png",  
+        description: "(insert description)."
     }
 ];
 
@@ -332,6 +332,9 @@ function showAbilityAnnouncement() {
     abilityImage.src = ability.image; // Set the image source
     abilityDescription.textContent = ability.description;
 
+    // Show hidden elements
+    abilityImage.style.display = "inline-block";
+    abilityDescription.style.display = "block"
     // Make the ability screen visible
     announcementScreen.style.display = "block"; // Show the ability announcement screen
 }
