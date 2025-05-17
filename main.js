@@ -103,8 +103,8 @@ function loadGameFromFile(event) {
   };
 
   const promptPoolUnlock4 = { // Ice Spell
-    easy: ["cool", "solidify"],
-    medium: ["hoarfrost", "encase"],
+    easy: ["cool", "encase"],
+    medium: ["solidify", "freeze"],
     hard: ["glaciate", "subzero"],
     insane: ["immobilize", "frostbite"]
   };
@@ -135,6 +135,7 @@ function loadGameFromFile(event) {
   let boss = null;
   let playerTurn = false;
   let isPaused = false;
+  let iceSpellUsed = false;
   let agilityUsed = false;
   let timerBar = null;
   let totalTime = 0;
@@ -238,7 +239,7 @@ function loadGameFromFile(event) {
         if (timeLeft <= 0) {
             clearInterval(timer);
             handleFailure("Time's up!");
-            if (!playerTurn) enemyAttack();
+            if (!playerTurn && boss.hp > 0) enemyAttack();
             document.getElementById("promptTimerBarContainer").style.display = "none";
         }
     }, 100);
@@ -293,27 +294,27 @@ const abilities = [
     {
         message: "Healing Potion Unlocked!",
         image: "assets/images/healing_potion.png", 
-        description: "(insert description)."
+        description: "The healing potion restores 1/10 of your health when used."
     },
     {
         message: "Counter Attack Unlocked!",
         image: "assets/images/counter_attack.png",
-        description: "(insert description)."
+        description: "Allows you to strike foes with a light attack during your defense phase."
     },
     {
         message: "Wide Slash Unlocked!",
         image: "assets/images/wide_slash.png", 
-        description: "(insert description)."
+        description: "A wide slash that deals damage to every foe on-screen, damage depends on how many foes there are."
     },
     {
         message: "Ice spell Unlocked!", 
         image: "assets/images/ice_spell.png",  
-        description: "(insert description)."
+        description: "Cast a spell to freeze your foes, damaging them, and allowing you to use another attack before entering your defense phase."
     },
     {
         message: "Agility Potion Unlocked!",
         image: "assets/images/agility_potion.png",  
-        description: "(insert description)."
+        description: "A potion that increases your reflexes, slowing the prompt timer down for the rest of the stage."
     }
 ];
 
@@ -394,6 +395,12 @@ function showStageAnnouncement() {
     }
     });
 
+    iceSpellUsed = false;
+    document.getElementById("bossSprite").classList.remove("frozen");
+    agilityUsed = false;
+
+    //dont reset player health
+    //playerHP = 100;
     updateBars();
   
     const bossSprite = `assets/avatar/boss_${stage}_idle.png`;
@@ -464,6 +471,10 @@ function showStageAnnouncement() {
     else if (stage >= 7 && stage < 10) difficulty = "hard";
     else if (stage >= 10) difficulty = "insane";
   
+    if (!playerTurn && iceSpellUsed) {
+      iceWearOff();
+    }
+
     const pool = playerTurn ? promptPoolAttack[difficulty] : promptPoolDefend[difficulty];
     currentPrompt = pool[Math.floor(Math.random() * pool.length)];
   
@@ -487,7 +498,7 @@ function showStageAnnouncement() {
       promptUnlock3 = poolUnlock3[Math.floor(Math.random() * poolUnlock3.length)];
       document.getElementById("promptText").innerHTML += `<br>Use a wide slash! Type: "${promptUnlock3}"`;
     }
-    if (stage > 4 && playerTurn) {
+    if (stage > 4 && playerTurn && !iceSpellUsed) {
       const poolUnlock4 = promptPoolUnlock4[difficulty];
       promptUnlock4 = poolUnlock4[Math.floor(Math.random() * poolUnlock4.length)];
       document.getElementById("promptText").innerHTML += `<br>Use an ice spell! Type: "${promptUnlock4}"`;
@@ -504,14 +515,15 @@ function showStageAnnouncement() {
     inputEl.focus();
   
     if (timer) {
-        clearTimeout(timer); 
+        clearTimeout(timer);
     }
 
     const baseTime = 4000;
     const timePerCharacter = 300;
     const stageBonus = stage * 200;
-    totalTime = baseTime + (currentPrompt.length * timePerCharacter) + stageBonus;
-  
+    totalTime = baseTime + (currentPrompt.length * timePerCharacter) - stageBonus;
+    if (agilityUsed) totalTime = totalTime * 2;
+
     timerStartTime = Date.now();
     remainingTime = totalTime; 
 
@@ -588,7 +600,7 @@ function showStageAnnouncement() {
         document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
       }, 500);
     }
-    if (stage > 4 && playerTurn && typed === promptUnlock4) {
+    if (stage > 4 && playerTurn && typed === promptUnlock4 && !iceSpellUsed) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
@@ -601,13 +613,14 @@ function showStageAnnouncement() {
         document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
       }, 500);
     }
-    if (stage > 5 && playerTurn && typed === promptUnlock5) {
+    if (stage > 5 && playerTurn && typed === promptUnlock5 && !agilityUsed) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
       score += 1;
       document.getElementById("score").textContent = score;
-      agilityPotion();
+      agilityUsed = true;
+      nextPrompt();
     }
   }
   
@@ -745,13 +758,34 @@ function showStageAnnouncement() {
   }
 
   function iceSpell() { // Unlocked Ability 4
-    // TODO, damage an enemy and stops them from attacking during the next dodge turn,
-    // also does extra damage against Stage 5's boss
+    iceSpellUsed = true;
+    playerTurn = false;
+
+    const target = enemies.find(e => e.hp > 0);
+    if (target) {
+      const enemyIndex = enemies.indexOf(target);
+      document.getElementById(`enemySprite_${enemyIndex}`).classList.add("frozen");
+      attackEnemyOrBoss(0.5);
+    } else {
+      document.getElementById("bossSprite").classList.add("frozen");
+      if (stage === 5) {
+        attackEnemyOrBoss(2);
+      } else {
+        attackEnemyOrBoss(0.5);
+      }
+    }
   }
 
-  function agilityPotion() { // Unlocked Ability 5
-    // TODO, doubles the time limit for each turn,
-    // can only be used once
+  function iceWearOff() { // Remove Ice Effect
+    iceSpellUsed = false;
+
+    const target = enemies.find(e => e.hp > 0);
+    if (target) {
+      const enemyIndex = enemies.indexOf(target);
+      document.getElementById(`enemySprite_${enemyIndex}`).classList.remove("frozen");
+    } else {
+      document.getElementById("bossSprite").classList.remove("frozen");
+    }
   }
 
   function updateBars() {
