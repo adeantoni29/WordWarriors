@@ -7,7 +7,7 @@ body {
     
 }
 #game-title {
-    padding-top:25px;
+    margin-top:40px;
     width: min(75vw, 800px);
 }
 #ability-announcement-screen{
@@ -22,7 +22,12 @@ h1 {
     font-size: 1.2rem;
     margin-bottom: 30px;
 }
+#start-screen {
+    position: relative;
+    margin-top: -150px;
+    left: -30px;
 
+}
 .scroll-text {
     background-image: url("assets/images/Scroll.png");
     background-size: contain;
