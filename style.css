@@ -84,6 +84,10 @@ input[type="text"] {
     background-color: transparent;
 }
 
+.frozen {
+    filter: sepia(1) hue-rotate(165deg) saturate(1000%);
+}
+
 #pause-button:hover,
 #exit-button:hover {
     background-color: #666;
