@@ -295,27 +295,27 @@ const abilities = [
     {
         message: "Healing Potion Unlocked!",
         image: "assets/images/healing_potion.png", 
-        description: "(insert description)."
+        description: "The healing potion restores 1/10 of your health when used."
     },
     {
         message: "Counter Attack Unlocked!",
         image: "assets/images/counter_attack.png",
-        description: "(insert description)."
+        description: "Allows you to strike foes with a light attack during your defense phase."
     },
     {
         message: "Wide Slash Unlocked!",
         image: "assets/images/wide_slash.png", 
-        description: "(insert description)."
+        description: "A wide slash that deals damage to every foe on-screen, damage depends on how many foes there are."
     },
     {
         message: "Ice spell Unlocked!", 
         image: "assets/images/ice_spell.png",  
-        description: "(insert description)."
+        description: "Cast a spell to freeze your foes, damaging them, and allowing you to use another attack before entering your defense phase."
     },
     {
         message: "Agility Potion Unlocked!",
         image: "assets/images/agility_potion.png",  
-        description: "(insert description)."
+        description: "A potion that increases your reflexes, slowing the prompt timer down for the rest of the stage."
     }
 ];
 
@@ -497,7 +497,7 @@ function showStageAnnouncement() {
       promptUnlock3 = poolUnlock3[Math.floor(Math.random() * poolUnlock3.length)];
       document.getElementById("promptText").innerHTML += `<br>Use a wide slash! Type: "${promptUnlock3}"`;
     }
-    if (stage > 0 && playerTurn && !iceSpellUsed) {
+    if (stage > 4 && playerTurn && !iceSpellUsed) {
       const poolUnlock4 = promptPoolUnlock4[difficulty];
       promptUnlock4 = poolUnlock4[Math.floor(Math.random() * poolUnlock4.length)];
       document.getElementById("promptText").innerHTML += `<br>Use an ice spell! Type: "${promptUnlock4}"`;
@@ -599,7 +599,7 @@ function showStageAnnouncement() {
         document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
       }, 500);
     }
-    if (stage > 0 && playerTurn && typed === promptUnlock4 && !iceSpellUsed) {
+    if (stage > 4 && playerTurn && typed === promptUnlock4 && !iceSpellUsed) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
