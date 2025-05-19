@@ -104,13 +104,21 @@
 
     <button class="pixel-btn new-game" onclick="newGame()"></button>
     <button class="pixel-btn load-game" id="loadGameButton" onclick="loadGameFromFile(event)" disabled></button>
-    <input type="file" id="loadGameFile" onchange="enableLoadButton(event)">
+
+    <!-- Hidden file input-->
+    <input type="file" id="loadGameFile" onchange="enableLoadButton(event)" style="display: none;" />
+
+    <!-- image for choose file button-->
+    <label for="loadGameFile">
+  <img src="assets/images/choose_file.png" alt="Choose File" class="choose-file-button" />
+</label>
   </div>
 
   <!-- Game Screen -->
   <div id="game-container" style="display: none; position: relative;">
 
-    <button id="pause-button" onclick="pauseGame()">Pause</button>
+    <input type="button" id="pause-button" onclick="pauseGame()" style="display: none;" />
+
     <button id="exit-button" onclick="exitGame()">Exit to Main Menu</button>
 
 
@@ -152,10 +160,21 @@
       disabled
       onpaste="return false"
     />
-  
-    <!-- <p id="game-log"></p> -->
- 
+
+     <!-- Hidden functional buttons -->
+  <input type="button" id="pause-button" onclick="pauseGame()" style="display: none;" />
+  <input type="button" id="exit-button" onclick="exitGame()" style="display: none;" />
+
+  <!-- Centered image buttons under typing bar -->
+  <div class="button-row-centered">
+    <label for="pause-button">
+      <img src="assets/images/pause.png" alt="Pause" class="pause-button-img" />
+    </label>
+    <label for="exit-button">
+      <img src="assets/images/exit_to_menu.png" alt="Exit to Menu" class="exit-button-img" />
+    </label>
   </div>
+</div>
 
   <!-- Ability Announcement Screen -->
 <div id="ability-announcement-screen" style="display: none; text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;">
