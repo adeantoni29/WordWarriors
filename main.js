@@ -237,10 +237,10 @@ function loadGameFromFile(event) {
         let timeLeft = remainingTime - elapsed;
 
         if (timeLeft <= 0) {
-            clearInterval(timer);
-            handleFailure("Time's up!");
-            if (!playerTurn && boss.hp > 0) enemyAttack();
-            document.getElementById("promptTimerBarContainer").style.display = "none";
+          clearInterval(timer);
+          if (!playerTurn && boss.hp > 0) enemyAttack();
+          handleFailure("Time's up!");
+          //document.getElementById("promptTimerBarContainer").style.display = "none";
         }
     }, 100);
   }
@@ -361,31 +361,31 @@ function nextStage() {
 function showStageAnnouncement() {
     const screen = document.getElementById("ability-announcement-screen");
     const announcement = document.getElementById("stage-announcement");
-    const countdownDisplay = document.getElementById("countdown-display"); // For visual countdown
+    //const countdownDisplay = document.getElementById("countdown-display"); // For visual countdown
     const gameContainer = document.getElementById("game-container");
 
     screen.style.display = "block";
     gameContainer.style.display = "none"; // Hide game container
-    announcement.textContent = `Get ready for Stage ${stage}!`; // Announce the new stage
-    announcement.style.display = "block"; // Show the stage announcement
-    countdownDisplay.style.display = "block"; // Show countdown timer
+    //announcement.textContent = `Get ready for Stage ${stage}!`; // Announce the new stage
+    //announcement.style.display = "block"; // Show the stage announcement
+    //countdownDisplay.style.display = "block"; // Show countdown timer
 
     let countdown = 3; // Start countdown from 3 seconds
 
     // Update the countdown display every second
-    const countdownInterval = setInterval(() => {
-        countdownDisplay.textContent = countdown; // Display the countdown number
-        countdown--; // Decrease countdown by 1
-        if (countdown < 0) {
-            clearInterval(countdownInterval); // Stop the countdown when it reaches 0
-            // Hide the countdown and proceed to the next stage
-            screen.style.display = "none";
-            countdownDisplay.style.display = "none";
-            announcement.style.display = "none";
-            gameContainer.style.display = "block"; // Show the game container
-            resetStage(); // Reset the stage for the next round
-        }
-    }, 1000); // Update every 1 second
+    //const countdownInterval = setInterval(() => {
+    //    countdownDisplay.textContent = countdown; // Display the countdown number
+    //    countdown--; // Decrease countdown by 1
+    //    if (countdown < 0) {
+    //        clearInterval(countdownInterval); // Stop the countdown when it reaches 0
+    //        // Hide the countdown and proceed to the next stage
+    //        screen.style.display = "none";
+    //        countdownDisplay.style.display = "none";
+    //        announcement.style.display = "none";
+    //        gameContainer.style.display = "block"; // Show the game container
+    //        resetStage(); // Reset the stage for the next round
+    //    }
+    //}, 1000); // Update every 1 second
     showAbilityAnnouncement();
 }
 
@@ -407,6 +407,8 @@ function showStageAnnouncement() {
     }
     });
 
+    document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
+    playerTurn = false;
     iceSpellUsed = false;
     document.getElementById("bossSprite").classList.remove("frozen");
     agilityUsed = false;
@@ -472,8 +474,6 @@ function showStageAnnouncement() {
   
   // Prompt Logic 
   function nextPrompt() {
-    if (isPaused) return;
-  
     playerTurn = !playerTurn;
   
     let difficulty = "easy";
@@ -543,6 +543,8 @@ function showStageAnnouncement() {
     timerBar.style.transition = "none";
     timerBar.style.width = "100%";
   
+    if (isPaused) return;
+    
     setTimeout(() => {
       timerBar.style.transition = `width ${totalTime}ms linear`;
       timerBar.style.width = "0%";
@@ -690,14 +692,7 @@ function showStageAnnouncement() {
     inputEl.disabled = true;
     document.getElementById("game-log").textContent = message;
   
-    if (!playerTurn) playerHP -= 10;
-  
-    if (playerHP <= 0) {
-      document.getElementById("game-container").style.display = "none";
-      document.getElementById("defeated-screen").style.display = "block";
-      document.getElementById("game-log").textContent = "You have been defeated!";
-      inputEl.removeEventListener("input", handleTyping);
-    } else {
+    if (playerHP > 0) {
       updateBars();
       setTimeout(() => {
         inputEl.disabled = false;
@@ -707,7 +702,7 @@ function showStageAnnouncement() {
   }
   
   function enemyAttack() {
-    if (!playerTurn) playerHP -= 15;
+    if (!playerTurn) playerHP -= 25;
   
     const target = enemies.find(e => e.hp > 0);
     if (target) {
@@ -724,9 +719,14 @@ function showStageAnnouncement() {
     }
 
     if (playerHP <= 0) {
-      showDefeatedScreen();
-      // document.getElementById("game-log").textContent = "You have been defeated!";
+      document.getElementById("playerSprite").src = `assets/avatar/player_hurt.png`;
+      document.getElementById("playerHealth").style.width = "0%";
+  
+      setTimeout(() => {
       inputEl.disabled = true;
+      showDefeatedScreen();
+      }, 1000);
+      // document.getElementById("game-log").textContent = "You have been defeated!";
     }
     updateBars();
   }
@@ -818,10 +818,13 @@ function showStageAnnouncement() {
   }
 
   function showDefeatedScreen() {
-    let defeat = document.getElementById("game-log").textContent;
-    if (defeat == "You have been defeated") {
+    if (playerHP <= 0) {
       document.getElementById("defeated-screen").style.display = "block";
       document.getElementById("game-log").textContent = "You have been defeated!";
+      document.getElementById("game-container").style.display = "none";
+      document.getElementById("pause-screen").style.display = "none";
+      document.getElementById("victory-text").style.display = "none";
+      document.getElementById("ending-screen").style.display = "none";
     }
   }
   //////////////////////// BOSS 4 ABILITY ///////////////////////////////////////
