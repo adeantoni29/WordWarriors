@@ -416,7 +416,6 @@ function showStageAnnouncement() {
     inputEl.disabled = false;
     nextPrompt();
   }
-  
   function createEnemies() {
     const enemiesContainer = document.getElementById("enemies-container");
     enemiesContainer.innerHTML = "";
@@ -481,7 +480,7 @@ function showStageAnnouncement() {
     document.getElementById("promptText").textContent = playerTurn
       ? `Fight the enemy! Type: "${currentPrompt}"`
       : `Defend yourself! Type: "${currentPrompt}"`;
-  
+
     // Unlocked Abilities
     if (stage > 1 && playerTurn) {
       const poolUnlock1 = promptPoolUnlock1[difficulty];
@@ -540,7 +539,8 @@ function showStageAnnouncement() {
 
     startTimer();
   }
-  
+  reversePower();
+
   //  Typing Handler
   function handleTyping() {
     if (isPaused) return;
@@ -793,11 +793,58 @@ function showStageAnnouncement() {
   }
 
   function showDefeatedScreen() {
-    if (message == "You have been defeated") {
+    let defeat = document.getElementById("game-log").textContent;
+    if (defeat == "You have been defeated") {
       document.getElementById("defeated-screen").style.display = "block";
       document.getElementById("game-log").textContent = "You have been defeated!";
     }
   }
+  //////////////////////// BOSS 4 ABILITY ///////////////////////////////////////
+  function blindPower() {
+    // let bossSprite = document.getElementById("bossSprite").src;
+
+    let aliveEnemies = enemies.filter(e => e.hp > 0);
+      
+    if (stage == 4 && aliveEnemies.length === 0) {
+      document.getElementById("promptText").style.filter = "blur(7px)";
+      document.getElementById("promptText").style.transition = "filter .5s ease-out";
+
+      setTimeout(() => {
+        document.getElementById("promptText").style.filter = "none";
+      }, 7500);
+
+      randomInterval = Math.floor(Math.random() * (8000) + 8000);
+      setTimeout(blindPower, randomInterval);
+    }
+  }
+  setInterval(() => {
+    let aliveEnemies = enemies.filter(e => e.hp > 0);
+    // let boss = enemies.find(e => e.type === "boss");
+    if (aliveEnemies.length === 0) {
+      blindPower();
+    }
+  }, 3000);
+//////////////////////// BOSS 5 ABILITY ///////////////////////////////////////
+  // function reversePower() {
+  //   // let aliveEnemies = enemies.filter(e => e.hp > 0);
+  //   // && aliveEnemies.length === 0
+  //   if (stage == 1 ) {
+  //     let reverseWord = document.getElementById("promptText");
+  //     if (!reverseWord) {
+  //       console.error("Element with ID 'promptText' not found!");
+  //       return;
+  //     }
+  //     let newWord = reverseWord.textContent;
+  //     reverseWord.textContent = newWord.split('').reverse().join('');
+
+  //     console.log(reverseWord.textContent); // Output: "ssob"
+  //   }
+  // }
+
+
+
+
+  
 
   
  
