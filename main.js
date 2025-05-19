@@ -223,7 +223,7 @@ function loadGameFromFile(event) {
   
   function startGame() {
     stage = 1;
-
+    score = 0;
     playerHP = 100;
     updateBars();
     resetStage();
@@ -280,6 +280,8 @@ function loadGameFromFile(event) {
     document.getElementById("start-screen").style.display = "block";
     document.getElementById("game-container").style.display = "none";
     document.getElementById("pause-screen").style.display = "none";
+    document.getElementById("victory-text").style.display = "none";
+    document.getElementById("ending-screen").style.display = "none";
    
     if (!isPaused) return;
     isPaused = false;
@@ -466,9 +468,9 @@ function showStageAnnouncement() {
     playerTurn = !playerTurn;
   
     let difficulty = "easy";
-    if (stage >= 4 && stage < 7) difficulty = "medium";
-    else if (stage >= 7 && stage < 10) difficulty = "hard";
-    else if (stage >= 10) difficulty = "insane";
+    if (stage >= 3 && stage < 5) difficulty = "medium";
+    else if (stage >= 5 && stage < 7) difficulty = "hard";
+    else if (stage >= 7) difficulty = "insane";
   
     if (!playerTurn && iceSpellUsed) {
       iceWearOff();
@@ -551,7 +553,7 @@ function showStageAnnouncement() {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      score += 1;
+      score++;
       document.getElementById("score").textContent = score;
       if (playerTurn) {
         attackEnemyOrBoss(1);
@@ -570,7 +572,7 @@ function showStageAnnouncement() {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      score += 1;
+      score++;
       document.getElementById("score").textContent = score;
       healingPotion();
     }
@@ -578,7 +580,7 @@ function showStageAnnouncement() {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      score += 1;
+      score++;
       document.getElementById("score").textContent = score;
       attackEnemyOrBoss(0.5);
       
@@ -591,7 +593,7 @@ function showStageAnnouncement() {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      score += 1;
+      score++;
       document.getElementById("score").textContent = score;
       wideSlash();
       
@@ -604,7 +606,7 @@ function showStageAnnouncement() {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      score += 1;
+      score++;
       document.getElementById("score").textContent = score;
       iceSpell();
       
@@ -617,7 +619,7 @@ function showStageAnnouncement() {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      score += 1;
+      score++;
       document.getElementById("score").textContent = score;
       agilityUsed = true;
       nextPrompt();
@@ -646,13 +648,20 @@ function showStageAnnouncement() {
     } else {
       boss.hp -= damage;
       if (boss.hp <= 0) {
-        document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
-        document.getElementById("bossHealth").style.width = "0%";
+        if (stage == 7) {
+          document.getElementById("bossHealth").style.width = "0%";
+          setTimeout(() => {
+            completeGame();
+          }, 1000);
+        } else {
+          document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
+          document.getElementById("bossHealth").style.width = "0%";
   
-        setTimeout(() => {
-          stage++;
-          showStageAnnouncement();
-        }, 1000);
+          setTimeout(() => {
+            stage++;
+            showStageAnnouncement();
+          }, 1000);
+        }
       } else {
         updateBossBar();
         inputEl.value = "";
@@ -742,13 +751,20 @@ function showStageAnnouncement() {
 
     boss.hp -= damagePerEnemy;
     if (boss.hp <= 0) {
-      document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
-      document.getElementById("bossHealth").style.width = "0%";
+      if (stage == 7) {
+        document.getElementById("bossHealth").style.width = "0%";
+        setTimeout(() => {
+          completeGame();
+        }, 1000);
+      } else {
+        document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_hurt.png`;
+        document.getElementById("bossHealth").style.width = "0%";
   
-      setTimeout(() => {
-        stage++;
-        showStageAnnouncement();
-      }, 1000);
+        setTimeout(() => {
+          stage++;
+          showStageAnnouncement();
+        }, 1000);
+      }
     } else {
       updateBossBar();
       inputEl.value = "";
@@ -851,3 +867,13 @@ function showStageAnnouncement() {
   
   
   
+    function completeGame(){
+    document.getElementById("victory-text").style.display = "block";
+    document.getElementById("ending-screen").style.display = "block";
+    document.getElementById("game-container").style.display = "none";
+    document.getElementById("pause-screen").style.display = "none";
+   
+    if (!isPaused) return;
+    isPaused = false;
+
+  }

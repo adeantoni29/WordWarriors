@@ -44,7 +44,7 @@ h1 {
     box-sizing: border-box;
     font-family: 'Georgia', serif;
     font-weight: bold;
-    font-size: min(2.5vw, 18px);
+    font-size: min(2.5vw, 17px);
     color: #2d1600;
     padding-bottom: 30px;
     
@@ -150,6 +150,22 @@ input[type="text"] {
     align-items: center;
     box-shadow: rgba(226, 226, 233, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
+
+#ending-screen {
+    display: none;
+    position: relative;
+    margin-top: -150px;
+    left: -30px;
+}
+
+#victory-text {
+    display: none;
+    color: rgb(255, 255, 255);
+    font-family: 'Georgia', serif;
+    margin-top:40px;
+    margin-bottom: 125px;
+}
+
 p#game-log {
     text-align: center;
     margin-top:100px;
