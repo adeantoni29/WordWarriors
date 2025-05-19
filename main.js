@@ -382,7 +382,7 @@ function showStageAnnouncement() {
     }, 1000); // Update every 1 second
 }
 
-//showAbilityAnnouncement();
+showAbilityAnnouncement();
   // Stage Setup 
   function resetStage() {
     document.getElementById("game-title").style.display = "none";
