@@ -847,6 +847,7 @@ function showStageAnnouncement() {
       document.getElementById("victory-text").style.display = "none";
       document.getElementById("ending-screen").style.display = "none";
     }
+    showDefeatedScreen();
   }
   //////////////////////// BOSS 4 ABILITY ///////////////////////////////////////
   function blindPower() {
@@ -866,13 +867,13 @@ function showStageAnnouncement() {
       setTimeout(blindPower, randomInterval);
     }
   }
-  setInterval(() => {
-    let aliveEnemies = enemies.filter(e => e.hp > 0);
-    // let boss = enemies.find(e => e.type === "boss");
-    if (aliveEnemies.length === 0) {
-      blindPower();
-    }
-  }, 3000);
+   setInterval(() => {
+      let aliveEnemies = enemies.filter(e => e.hp > 0);
+      // let boss = enemies.find(e => e.type === "boss");
+      if (aliveEnemies.length === 0) {
+        blindPower();
+      }
+    }, 3000);
 //////////////////////// BOSS 5 ABILITY ///////////////////////////////////////
   let lastWord = "";
   function reversePower() {
@@ -908,24 +909,12 @@ function showStageAnnouncement() {
 
     }
     setInterval(reversePower, 6000);
+    reversePower();
   }
 
-// reversePower();
 
 
-
-
-
-
-
-  
-
-  
- 
-  
-  
-  
-    function completeGame(){
+  function completeGame(){
     document.getElementById("victory-text").style.display = "block";
     document.getElementById("ending-screen").style.display = "block";
     document.getElementById("game-container").style.display = "none";
