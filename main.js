@@ -411,6 +411,7 @@ function showStageAnnouncement() {
     document.getElementById("bossSprite").classList.remove("frozen");
     agilityUsed = false;
 
+    playerHP = 100;
     updateBars();
   
     const bossSprite = `assets/avatar/boss_${stage}_idle.png`;
