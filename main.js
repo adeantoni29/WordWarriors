@@ -328,6 +328,7 @@ function showAbilityAnnouncement() {
 
     // Get the ability for the current stage
     const ability = abilities[currentStage - 1];
+   
 
     // Update the announcement message
     announcement.textContent = ability.message;
@@ -340,6 +341,7 @@ function showAbilityAnnouncement() {
     // Make the ability screen visible
     announcementScreen.style.display = "block"; // Show the ability announcement screen
 }
+
 
 // Move to the next stage when the "Next Stage" button is clicked
 function nextStage() {
@@ -380,6 +382,7 @@ function showStageAnnouncement() {
     }, 1000); // Update every 1 second
 }
 
+showAbilityAnnouncement();
   // Stage Setup 
   function resetStage() {
     document.getElementById("game-title").style.display = "none";
@@ -541,7 +544,7 @@ function showStageAnnouncement() {
 
     startTimer();
   }
-  reversePower();
+  // reversePower();
 
   //  Typing Handler
   function handleTyping() {
@@ -841,21 +844,46 @@ function showStageAnnouncement() {
     }
   }, 3000);
 //////////////////////// BOSS 5 ABILITY ///////////////////////////////////////
-  // function reversePower() {
-  //   // let aliveEnemies = enemies.filter(e => e.hp > 0);
-  //   // && aliveEnemies.length === 0
-  //   if (stage == 1 ) {
-  //     let reverseWord = document.getElementById("promptText");
-  //     if (!reverseWord) {
-  //       console.error("Element with ID 'promptText' not found!");
-  //       return;
-  //     }
-  //     let newWord = reverseWord.textContent;
-  //     reverseWord.textContent = newWord.split('').reverse().join('');
+  let lastWord = "";
+  function reversePower() {
+    let aliveEnemies = enemies.filter(e => e.hp > 0)
 
-  //     console.log(reverseWord.textContent); // Output: "ssob"
-  //   }
-  // }
+    if (stage == 5 && aliveEnemies.length === 0) {
+      let reverseWord = document.getElementById("promptText");
+      console.log(reverseWord.textContent);
+      if (!reverseWord) {
+        console.error("Element with ID 'promptText' not found!");
+        return;
+      }
+      let newWord = reverseWord.textContent;
+
+      let word = newWord.match(/"([^"]+)"/);
+        if (!word) {
+            console.error("No quoted word found!");
+            return;
+        }
+
+      let commandWord = word[1];
+      let newText = newWord;
+      if (commandWord != lastWord) {
+        let reversedWord = commandWord.split("").reverse().join("");
+        newText = newWord.replace(`"${commandWord}"`, `"${reversedWord}"`);
+        reverseWord.textContent = newText;
+        lastWord = commandWord;
+      }
+
+      console.log("Updated text:", newText);
+
+      // console.log(reverseWord.textContent); // Output: "ssob"
+
+    }
+    setInterval(reversePower, 6000);
+  }
+
+// reversePower();
+
+
+
 
 
 

@@ -11,6 +11,7 @@ body {
     width: min(75vw, 800px);
 }
 #ability-announcement-screen{
+    display: none;
     border: 3px solid red;
 }
 
@@ -168,6 +169,7 @@ input[type="text"] {
 }
 
 #ability-announcement-screen {
+    display: none;
     border: 3px solid red;
     margin: auto;
     margin-top: 155px;
