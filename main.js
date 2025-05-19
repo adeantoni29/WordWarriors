@@ -380,9 +380,10 @@ function showStageAnnouncement() {
             resetStage(); // Reset the stage for the next round
         }
     }, 1000); // Update every 1 second
+    showAbilityAnnouncement();
 }
 
-showAbilityAnnouncement();
+
   // Stage Setup 
   function resetStage() {
     document.getElementById("game-title").style.display = "none";
@@ -404,8 +405,6 @@ showAbilityAnnouncement();
     document.getElementById("bossSprite").classList.remove("frozen");
     agilityUsed = false;
 
-    //dont reset player health
-    //playerHP = 100;
     updateBars();
   
     const bossSprite = `assets/avatar/boss_${stage}_idle.png`;

@@ -12,7 +12,6 @@ body {
 }
 #ability-announcement-screen{
     display: none;
-    border: 3px solid red;
 }
 
 h1 {
@@ -148,7 +147,6 @@ input[type="text"] {
 }
 
 .ability-announcement {
-    display: none;
     text-align: center;
     font-size: 24px;
     font-weight: bold;
@@ -169,7 +167,6 @@ input[type="text"] {
 }
 
 #ability-announcement-screen {
-    display: none;
     border: 3px solid red;
     margin: auto;
     margin-top: 155px;
