@@ -930,7 +930,8 @@ function showStageAnnouncement() {
     document.getElementById("ending-screen").style.display = "block";
     document.getElementById("game-container").style.display = "none";
     document.getElementById("pause-screen").style.display = "none";
-   
+
+     document.getElementById("promptCount").textContent = score;
     if (!isPaused) return;
     isPaused = false;
 

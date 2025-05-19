@@ -102,6 +102,12 @@
       </h2>
     </div>
 
+    <div class="border-text">
+      <h1>How to Play</h1>
+      <h2>Type the displayed prompts to perform their corresponding actions. Once an action is performed you will defend against an enemy attack by typing a defense action prompt. If time runs out during your attack phase, the defense phase will begin. If time runs out during your defense phase, the enemy will damage you.
+      </h2>
+    </div>
+
     <button class="pixel-btn new-game" onclick="newGame()"></button>
     <button class="pixel-btn load-game" id="loadGameButton" onclick="loadGameFromFile(event)" disabled></button>
 
@@ -215,10 +221,15 @@
       </h2>
     </div>
 
+    <div class="border-text">
+      <h2>Prompts Typed:</h2>
+      <h1 id="promptCount"></h1>
+    </div>
+
     <input type="button" id="exit-button" onclick="exitGame()" style="display: none;" />
     <div class="button-row-centered">
       <label for="exit-button">
-        <img style="width: 240px; height: 80px;" src="assets/images/exit_to_menu.png" alt="Exit to Menu" class="exit-button-img" />
+        <img style="width: 240px; height: 80px; margin-bottom: 40px;" src="assets/images/exit_to_menu.png" alt="Exit to Menu" class="exit-button-img" />
       </label>
     </div>
   </div>
