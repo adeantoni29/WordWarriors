@@ -1,4 +1,4 @@
-html, body {
+html {
     background-image: url(assets/images/background.png);
     background-size: cover;
     background-repeat: no-repeat;
@@ -174,6 +174,7 @@ input[type="text"] {
 
 #ability-announcement-screen {
     border: 3px solid red;
+    background-color: #1e1e2f;
     margin: auto;
     margin-top: 155px;
     height: 300px;
@@ -185,6 +186,7 @@ input[type="text"] {
 
 #defeated-screen {
     border: 3px solid red;
+    background-color: #1e1e2f;
     display: none;
     font-size: 20px;
     margin: auto;
@@ -213,4 +215,5 @@ input[type="text"] {
 p#game-log {
     text-align: center;
     margin-top:100px;
+    font-family: 'Georgia', serif;
 }

@@ -289,6 +289,7 @@ function pauseKeybind(e) {
     document.getElementById("start-screen").style.display = "block";
     document.getElementById("game-container").style.display = "none";
     document.getElementById("pause-screen").style.display = "none";
+    document.getElementById("defeated-screen").style.display = "none";
     document.getElementById("victory-text").style.display = "none";
     document.getElementById("ending-screen").style.display = "none";
    
