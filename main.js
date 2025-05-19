@@ -345,10 +345,16 @@ function showAbilityAnnouncement() {
 
 // Move to the next stage when the "Next Stage" button is clicked
 function nextStage() {
-    if (currentStage < abilities.length) {
-        currentStage++; // Increase the stage number for the next ability
-        showStageAnnouncement(); // Show the next ability's announcement
-    }
+  if (currentStage < abilities.length) {
+    currentStage++;
+  }
+
+  // Hide the ability screen
+  document.getElementById("ability-announcement-screen").style.display = "none";
+
+  // Show the game and begin the next stage
+  document.getElementById("game-container").style.display = "block";
+  resetStage();
 }
 
 // Function to show the stage announcement after defeating a boss
