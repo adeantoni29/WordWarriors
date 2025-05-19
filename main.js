@@ -141,6 +141,7 @@ function loadGameFromFile(event) {
   let totalTime = 0;
   let timerStartTime = 0;
   let remainingTime = 0;
+  let gameActive = false;
   
   let now,dt,
     last = timestamp()
@@ -245,6 +246,12 @@ function loadGameFromFile(event) {
     }, 100);
   }
 
+function pauseKeybind(e) {
+    if (e.key === "Escape") {
+        isPaused ? resumeGame() : pauseGame();
+    }
+}
+
   //  Pause / Resume 
   function pauseGame() {
       if (isPaused || !timer) return;
@@ -276,6 +283,8 @@ function loadGameFromFile(event) {
   }
 
   function exitGame(){
+    gameActive = false;
+
     document.getElementById("game-title").style.display = "block";
     document.getElementById("start-screen").style.display = "block";
     document.getElementById("game-container").style.display = "none";
@@ -283,6 +292,11 @@ function loadGameFromFile(event) {
     document.getElementById("victory-text").style.display = "none";
     document.getElementById("ending-screen").style.display = "none";
    
+    inputEl.value = "";
+    inputEl.disabled = true;
+    clearInterval(timer);
+    document.removeEventListener("keydown", pauseKeybind);
+
     if (!isPaused) return;
     isPaused = false;
 
@@ -321,6 +335,7 @@ const abilities = [
 ];
 
 function showAbilityAnnouncement() {
+    if (!gameActive) return;
     const announcement = document.getElementById("ability-announcement");
     const abilityImage = document.getElementById("ability-image");
     const abilityDescription = document.getElementById("ability-description");
@@ -359,6 +374,7 @@ function nextStage() {
 
 // Function to show the stage announcement after defeating a boss
 function showStageAnnouncement() {
+    if (!gameActive) return;
     const screen = document.getElementById("ability-announcement-screen");
     const announcement = document.getElementById("stage-announcement");
     //const countdownDisplay = document.getElementById("countdown-display"); // For visual countdown
@@ -392,6 +408,8 @@ function showStageAnnouncement() {
 
   // Stage Setup 
   function resetStage() {
+    gameActive = true;
+
     document.getElementById("game-title").style.display = "none";
     document.getElementById("defeated-screen").style.display = "none";
     document.getElementById("game-container").style.display = "block";
@@ -401,11 +419,7 @@ function showStageAnnouncement() {
     inputEl = document.getElementById("commandInput");
     inputEl.addEventListener("input", handleTyping);
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        isPaused ? resumeGame() : pauseGame();
-    }
-    });
+    document.addEventListener("keydown", pauseKeybind);
 
     document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
     playerTurn = false;
@@ -474,6 +488,11 @@ function showStageAnnouncement() {
   
   // Prompt Logic 
   function nextPrompt() {
+    if (!gameActive) {
+      inputEl.value = "";
+      inputEl.disabled = true;
+      return;
+    }
     playerTurn = !playerTurn;
   
     let difficulty = "easy";
@@ -818,6 +837,7 @@ function showStageAnnouncement() {
   }
 
   function showDefeatedScreen() {
+    if (!gameActive) return;
     if (playerHP <= 0) {
       document.getElementById("defeated-screen").style.display = "block";
       document.getElementById("game-log").textContent = "You have been defeated!";
