@@ -67,6 +67,7 @@ h1 {
     
 }
 .border-text {
+    font-family: 'Metamorphous', sans-serif;
     border: 3px solid red;
     background-color: #1e1e2f;
     background-position: center;
@@ -278,6 +279,7 @@ input[type="text"] {
 }
 
 #victory-text {
+    font-family: 'Metamorphous', sans-serif;
     display: none;
     color: rgb(255, 255, 255);
     font-family: 'Georgia', serif;
