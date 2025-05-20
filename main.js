@@ -241,7 +241,7 @@ function startTimer() {
         clearInterval(timer);
         if (!playerTurn && boss.hp > 0) enemyAttack();
         handleFailure("Time's up!");
-        //document.getElementById("promptTimerBarContainer").style.display = "none";
+        
       }
   }, 100);
 }
@@ -303,8 +303,6 @@ function exitGame(){
 
 }
 
-// TODO perfect ability screen
-
 let currentStage = 1; // Start at stage 1
 
 const abilities = [
@@ -359,6 +357,7 @@ function showAbilityAnnouncement() {
 }
 
 
+
 // Move to the next stage when the "Next Stage" button is clicked
 function nextStage() {
 if (currentStage < abilities.length) {
@@ -378,31 +377,13 @@ function showStageAnnouncement() {
   if (!gameActive) return;
   const screen = document.getElementById("ability-announcement-screen");
   const announcement = document.getElementById("stage-announcement");
-  //const countdownDisplay = document.getElementById("countdown-display"); // For visual countdown
   const gameContainer = document.getElementById("game-container");
 
   screen.style.display = "block";
   gameContainer.style.display = "none"; // Hide game container
-  //announcement.textContent = `Get ready for Stage ${stage}!`; // Announce the new stage
-  //announcement.style.display = "block"; // Show the stage announcement
-  //countdownDisplay.style.display = "block"; // Show countdown timer
 
   let countdown = 3; // Start countdown from 3 seconds
 
-  // Update the countdown display every second
-  //const countdownInterval = setInterval(() => {
-  //    countdownDisplay.textContent = countdown; // Display the countdown number
-  //    countdown--; // Decrease countdown by 1
-  //    if (countdown < 0) {
-  //        clearInterval(countdownInterval); // Stop the countdown when it reaches 0
-  //        // Hide the countdown and proceed to the next stage
-  //        screen.style.display = "none";
-  //        countdownDisplay.style.display = "none";
-  //        announcement.style.display = "none";
-  //        gameContainer.style.display = "block"; // Show the game container
-  //        resetStage(); // Reset the stage for the next round
-  //    }
-  //}, 1000); // Update every 1 second
   showAbilityAnnouncement();
 }
 
@@ -757,7 +738,7 @@ function enemyAttack() {
     inputEl.disabled = true;
     showDefeatedScreen();
     }, 1000);
-    // document.getElementById("game-log").textContent = "You have been defeated!";
+    
   }
   updateBars();
 }
@@ -918,4 +899,3 @@ function completeGame(){
 
 }
 
- 
