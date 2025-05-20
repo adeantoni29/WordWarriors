@@ -554,6 +554,14 @@ function showStageAnnouncement() {
     totalTime = baseTime + (currentPrompt.length * timePerCharacter) - stageBonus;
     if (agilityUsed) totalTime = totalTime * 2;
 
+    //  Boss abilities trigger only when boss is last enemy
+    if (enemies.every(e => e.hp <= 0) && boss.hp > 0) {
+      if (stage === 4) blurPower();
+      if (stage === 5) reversePower();
+      if (stage === 6) replicaPower();
+      if (stage === 7) shrinkTimePower(); // modifies totalTime
+    }
+
     timerStartTime = Date.now();
     remainingTime = totalTime; 
 
@@ -917,23 +925,17 @@ function showStageAnnouncement() {
   // BOSS 6 ABILITY 
   function replicaPower() {
     let aliveEnemies = enemies.filter(e => e.hp > 0);
-      
+  
     if (stage == 6 && aliveEnemies.length === 0) {
-      let word = document.getElementById("promptText").textContent;
-
-      word.repeat(2);
+      // Duplicate the current prompt
+      currentPrompt = `${currentPrompt} ${currentPrompt}`;
+      document.getElementById("promptText").textContent = `Fight the enemy! Type the command twice: "${currentPrompt}"`;
     }
   }
-  replicaPower();
 
   // BOSS 7 ABILITY 
   function shrinkTimePower() {
-    let aliveEnemies = enemies.filter(e => e.hp > 0);
-      
-    if (stage == 7 && aliveEnemies.length === 0) {
-      remainingTime *= 0.5;
-      startTimer();
-    }
+    totalTime *= 0.5; // half the total time
   }
 
   // Game Over
