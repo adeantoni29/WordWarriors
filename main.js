@@ -588,19 +588,24 @@ function showStageAnnouncement() {
   
     const typed = inputEl.value.trim().toLowerCase();
   
-    if (typed === currentPrompt) {
+    const expectedPrompt = isReplicaActive ? `${currentPrompt} ${currentPrompt}` : currentPrompt;
+  
+    if (typed === expectedPrompt) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
+      isReplicaActive = false; // Reset replica if it was active
+  
       score++;
       document.getElementById("score").textContent = score;
+  
       if (playerTurn) {
         attackEnemyOrBoss(1);
-      
-      document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
-      setTimeout(() => {
-        document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
-      }, 500);
+  
+        document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
+        setTimeout(() => {
+          document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
+        }, 500);
       } else {
         nextPrompt();
       }
@@ -923,12 +928,15 @@ function showStageAnnouncement() {
   reversePower();
 
   // BOSS 6 ABILITY 
+  let isReplicaActive = false;
+
   function replicaPower() {
     let aliveEnemies = enemies.filter(e => e.hp > 0);
   
     if (stage == 6 && aliveEnemies.length === 0) {
       // Duplicate the current prompt
       currentPrompt = `${currentPrompt} ${currentPrompt}`;
+      isReplicaActive = true;
       document.getElementById("promptText").textContent = `Fight the enemy! Type the command twice: "${currentPrompt}"`;
     }
   }
