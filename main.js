@@ -330,6 +330,11 @@ const abilities = [
       message: "Agility Potion Unlocked!",
       image: "assets/images/agility_potion.png",  
       description: "A potion that increases your reflexes, slowing the prompt timer down for the rest of the stage."
+  },
+  {
+      message: "Final Stage!",
+      image: "assets/images/counter_attack.png",  
+      description: "The final stage is about to begin! Defeat the grand evil once and for all!"
   }
 ];
 
@@ -341,7 +346,7 @@ function showAbilityAnnouncement() {
   const announcementScreen = document.getElementById("ability-announcement-screen");
 
   // Get the ability for the current stage
-  const ability = abilities[currentStage - 1];
+  const ability = abilities[stage - 2];
  
 
   // Update the announcement message
