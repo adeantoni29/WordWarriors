@@ -69,7 +69,7 @@ h1 {
 }
 .border-text {
     font-family: 'Metamorphous', sans-serif;
-    border: 3px solid red;
+    border: 3px solid black;
     background-color: #1e1e2f;
     background-position: center;
     width: 50vw;
@@ -295,4 +295,26 @@ p#game-log {
     font-size: 60px;
     text-align: center;
     padding-top: 320px;
+}
+#next-stage-button {
+    color: transparent;
+    background-image: url('assets/images/next_stage.png');
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 150px;
+    height: 44px;
+}
+#save-game-button {
+    color: transparent;
+    background-image: url('assets/images/save_progress.png');
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 150px;
+    height: 49px;
+
+}
+#next-stage-button-img:hover {
+    content: url('assets/images/next_stage_hover.png');
 }

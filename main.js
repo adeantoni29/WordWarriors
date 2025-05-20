@@ -243,7 +243,6 @@ function loadGameFromFile(event) {
           clearInterval(timer);
           if (!playerTurn && boss.hp > 0) enemyAttack();
           handleFailure("Time's up!");
-          //document.getElementById("promptTimerBarContainer").style.display = "none";
         }
     }, 100);
   }
@@ -305,7 +304,7 @@ function pauseKeybind(e) {
 
   }
   
-  // TODO perfect ability screen
+  // perfect ability screen
 
   let currentStage = 1; // Start at stage 1
 
@@ -347,7 +346,6 @@ function showAbilityAnnouncement() {
     // Get the ability for the current stage
     const ability = abilities[currentStage - 1];
    
-
     // Update the announcement message
     announcement.textContent = ability.message;
     abilityImage.src = ability.image; // Set the image source
@@ -379,32 +377,12 @@ function nextStage() {
 function showStageAnnouncement() {
     if (!gameActive) return;
     const screen = document.getElementById("ability-announcement-screen");
-    const announcement = document.getElementById("stage-announcement");
-    //const countdownDisplay = document.getElementById("countdown-display"); // For visual countdown
+    // const announcement = document.getElementById("stage-announcement");
     const gameContainer = document.getElementById("game-container");
-
     screen.style.display = "block";
     gameContainer.style.display = "none"; // Hide game container
-    //announcement.textContent = `Get ready for Stage ${stage}!`; // Announce the new stage
-    //announcement.style.display = "block"; // Show the stage announcement
-    //countdownDisplay.style.display = "block"; // Show countdown timer
 
-    let countdown = 3; // Start countdown from 3 seconds
-
-    // Update the countdown display every second
-    //const countdownInterval = setInterval(() => {
-    //    countdownDisplay.textContent = countdown; // Display the countdown number
-    //    countdown--; // Decrease countdown by 1
-    //    if (countdown < 0) {
-    //        clearInterval(countdownInterval); // Stop the countdown when it reaches 0
-    //        // Hide the countdown and proceed to the next stage
-    //        screen.style.display = "none";
-    //        countdownDisplay.style.display = "none";
-    //        announcement.style.display = "none";
-    //        gameContainer.style.display = "block"; // Show the game container
-    //        resetStage(); // Reset the stage for the next round
-    //    }
-    //}, 1000); // Update every 1 second
+    // let countdown = 3; // Start countdown from 3 seconds
     showAbilityAnnouncement();
 }
 
@@ -796,7 +774,6 @@ function showStageAnnouncement() {
       inputEl.disabled = true;
       showDefeatedScreen();
       }, 1000);
-      // document.getElementById("game-log").textContent = "You have been defeated!";
     }
     updateBars();
   }
@@ -914,41 +891,30 @@ function showStageAnnouncement() {
 
     
 // BOSS 5 ABILITY
-function reversePower() {
-  if (reverseApplied || stage !== 5 || enemies.some(e => e.hp > 0)) return;
-
-  const promptEl = document.getElementById("promptText");
-  if (!promptEl) {
-    console.error("Element with ID 'promptText' not found!");
-    return;
-  }
-
-  let text = promptEl.textContent;
-  const matches = Array.from(text.matchAll(/"([^"]+)"/g));
-
-  if (!matches || matches.length === 0) {
-    console.warn("No quoted words found to reverse.");
-    return;
-  }
-
-  matches.forEach(match => {
-    const word = match[1];
-    const reversed = word.split("").reverse().join("");
-
-    text = text.replaceAll(`"${word}"`, `"${reversed}"`);
-
-    if (word === currentPrompt) {
-      currentPrompt = reversed;
+ function reversePower() { 
+    let aliveEnemies = enemies.filter(e => e.hp > 0) 
+    // && aliveEnemies.length === 0 
+    console.log("hello"); 
+    if (stage == 5) { 
+      let reverseWord = document.getElementById("promptText"); 
+      console.log(reverseWord.textContent); 
+      if (!reverseWord) {  
+      console.error("Element with ID 'promptText' not found!"); 
+      return; 
+      }
+    } 
+    let newWord = reverseWord.textContent;
+      let word = Array.from(newWord.matchAll(/"([^"]+)"/g));
+    if (word === 0) {
+        console.error("No quoted word found!");
+        return;
     }
 
-    if (isReplicaActive && word === `${currentPrompt} ${currentPrompt}`) {
-      currentPrompt = currentPrompt.split("").reverse().join("");
-    }
-  });
+    reverseWord.textContent = newWord;
 
-  promptEl.textContent = text;
-  reverseApplied = true;
-}
+    console.log("Updated text:", newWord);
+  }
+  setInterval(reversePower, 6000);
 
 // Automatically trigger during stage 5 when enemies are gone
 setInterval(() => {
