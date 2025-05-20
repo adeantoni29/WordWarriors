@@ -605,8 +605,6 @@ function showStageAnnouncement() {
     barContainer.style.display = "block";
     timerBar.style.transition = "none";
     timerBar.style.width = "100%";
-  
-    if (isPaused) return;
     
     setTimeout(() => {
       timerBar.style.transition = `width ${totalTime}ms linear`;
