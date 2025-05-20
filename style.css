@@ -142,6 +142,20 @@ input[type="text"] {
     content: url("assets/images/choose_file_hover.png");
   }
 
+  .resume-button-img {
+    width: 160px;
+    height: auto;
+    cursor: pointer;
+    image-rendering: pixelated;
+    content: url("assets/images/resume.png");
+    display: block;
+    margin: 20px auto;
+  }
+  
+  .resume-button-img:hover {
+    content: url("assets/images/resume_hover.png");
+  }
+
   .button-row-centered {
     display: flex;
     justify-content: center;
@@ -230,6 +244,33 @@ input[type="text"] {
     align-items: center;
     /* border: 3px solid red; */
 }
+
+.defeated-button-img {
+    width: 120px;
+    height: auto;
+    cursor: pointer;
+    image-rendering: pixelated;
+    display: block;
+    margin: 20px auto;
+  }
+  
+  /* Retry Button */
+  .retry-button-img {
+    content: url("assets/images/retry.png");
+  }
+  
+  .retry-button-img:hover {
+    content: url("assets/images/retry_hover.png");
+  }
+  
+  /* Exit to Menu Button */
+  .exit-defeated-button-img {
+    content: url("assets/images/exit_to_menu.png");
+  }
+  
+  .exit-defeated-button-img:hover {
+    content: url("assets/images/exit_to_menu_hover.png");
+  }
 
 #ending-screen {
     display: none;

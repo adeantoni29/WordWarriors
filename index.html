@@ -195,18 +195,29 @@
   <div id="stage-announcement" style="display: none; text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;"></div>
   <div id="countdown-display" style="display: none; text-align: center; font-size: 48px; font-weight: bold; color: rgb(255, 255, 255);"></div>
 
-  <!-- Pause Screen -->
   <div id="pause-screen">
     <p>Game Paused</p>
-    <button onclick="resumeGame()">Resume</button>
+    
+    <!-- Hidden functional input -->
+    <input type="button" id="resume-button" onclick="resumeGame()" style="display: none;" />
+  
+    <!-- Image-based Resume button -->
+    <label for="resume-button">
+      <img src="assets/images/resume.png" alt="Resume" class="resume-button-img" />
+    </label>
   </div>
 
   <!--Defeated Screen-->
   <div id="defeated-screen">
     <p id="game-log"></p>
-    <button onclick="resetStage()">Retry</button>
-    <button onclick="exitGame()">Exit to Main Menu</button>
-  </div>
+    <div class="defeated-buttons">
+      <label for="retry-button">
+        <img src="assets/images/retry.png" alt="Retry" class="retry-button-img defeated-button-img" />
+      </label>
+      <label for="exit-defeated-button">
+        <img src="assets/images/exit_to_menu.png" alt="Exit to Menu" class="exit-defeated-button-img defeated-button-img" />
+      </label>
+    </div>
 
   <h1 id="victory-text">Victory!</h1>
   <div id="ending-screen">
