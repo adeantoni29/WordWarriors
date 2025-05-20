@@ -850,8 +850,6 @@ function showStageAnnouncement() {
   }
   // BOSS 4 ABILITY 
   function blindPower() {
-    // let bossSprite = document.getElementById("bossSprite").src;
-
     let aliveEnemies = enemies.filter(e => e.hp > 0);
       
     if (stage == 4 && aliveEnemies.length === 0) {
@@ -914,16 +912,30 @@ function showStageAnnouncement() {
     }
     setInterval(reversePower, 6000);
   }
-    reversePower();
+  reversePower();
+
   // BOSS 6 ABILITY 
   function replicaPower() {
+    let aliveEnemies = enemies.filter(e => e.hp > 0);
+      
+    if (stage == 6 && aliveEnemies.length === 0) {
+      let word = document.getElementById("promptText").textContent;
 
+      word.repeat(2);
+    }
   }
+  replicaPower();
 
   // BOSS 7 ABILITY 
   function shrinkTimePower() {
-
+    let aliveEnemies = enemies.filter(e => e.hp > 0);
+      
+    if (stage == 7 && aliveEnemies.length === 0) {
+      remainingTime *= 0.5;
+      startTimer();
+    }
   }
+
   // Game Over
   function completeGame(){
     document.getElementById("victory-text").style.display = "block";
