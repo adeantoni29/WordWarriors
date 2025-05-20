@@ -3,7 +3,7 @@
     src: url('assets/fonts/Metamorphous/Metamorphous-Regular.ttf') format('truetype')
 }
 
-html, body {
+html { /* Having body here too causes a smaller copy of the background image to appear on top of the background image*/
     background-image: url(assets/images/background.png);
     background-size: cover;
     background-repeat: no-repeat;
@@ -17,16 +17,15 @@ html, body {
     width: min(75vw, 800px);
 }
 #game-container{
-    margin:0;
-    padding:0;
-    top:0;
-    bottom:0;
+    display: none;
+    margin: 100px auto 0px;
+    border: 3px solid red;
     background-color: #1e1e2f;
     background-size: cover;
     background-repeat: no-repeat;
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
+    width: 90vw;
+    position: relative;
+    padding-bottom: 30px;
 }
 #ability-announcement-screen{
     display: none;
@@ -236,9 +235,8 @@ input[type="text"] {
     background-size:contain;
     background-repeat: no-repeat; */
     display: none;
-  
     margin:auto;
-    margin-top: 155px;
+    margin-top: -155px;
     height: 300px;
     width: 500px;
     align-items: center;
@@ -289,6 +287,7 @@ input[type="text"] {
 
 p#game-log {
     font-family: 'Metamorphous', sans-serif;
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
     font-size: 60px;
     text-align: center;
     padding-top: 320px;
