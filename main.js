@@ -142,6 +142,7 @@ function loadGameFromFile(event) {
   let timerStartTime = 0;
   let remainingTime = 0;
   let gameActive = false;
+  let isReplicaActive = false;
   
   let now,dt,
     last = timestamp()
@@ -494,6 +495,7 @@ function showStageAnnouncement() {
       inputEl.disabled = true;
       return;
     }
+  
     playerTurn = !playerTurn;
   
     let difficulty = "easy";
@@ -501,16 +503,53 @@ function showStageAnnouncement() {
     else if (stage >= 5 && stage < 7) difficulty = "hard";
     else if (stage >= 7) difficulty = "insane";
   
-    if (!playerTurn && iceSpellUsed) {
-      iceWearOff();
-    }
-
+    if (!playerTurn && iceSpellUsed) iceWearOff();
+  
     const pool = playerTurn ? promptPoolAttack[difficulty] : promptPoolDefend[difficulty];
     currentPrompt = pool[Math.floor(Math.random() * pool.length)];
   
-    document.getElementById("promptText").textContent = playerTurn
+    // Determine full prompt and expected input
+    const actualPrompt = isReplicaActive && playerTurn ? `${currentPrompt} ${currentPrompt}` : currentPrompt;
+  
+    // Build prompt display
+    let promptMessage = playerTurn
       ? `Fight the enemy! Type: "${currentPrompt}"`
       : `Defend yourself! Type: "${currentPrompt}"`;
+  
+    if (isReplicaActive && playerTurn) {
+      promptMessage = `Fight the enemy! Type the command twice: "${currentPrompt}"`;
+    }
+  
+    document.getElementById("promptText").textContent = promptMessage;
+  
+    // Reset input and start timer
+    inputEl.value = "";
+    inputEl.disabled = false;
+    inputEl.focus();
+  
+    if (timer) clearInterval(timer);
+  
+    totalTime = 4000 + (actualPrompt.length * 300) - (stage * 200);
+    if (agilityUsed) totalTime *= 2;
+  
+    timerStartTime = Date.now();
+    remainingTime = totalTime;
+  
+    const barContainer = document.getElementById("promptTimerBarContainer");
+    timerBar = document.getElementById("promptTimerBar");
+    barContainer.style.display = "block";
+    timerBar.style.transition = "none";
+    timerBar.style.width = "100%";
+  
+    if (isPaused) return;
+  
+    setTimeout(() => {
+      timerBar.style.transition = `width ${totalTime}ms linear`;
+      timerBar.style.width = "0%";
+    }, 50);
+  
+    startTimer();
+  }
 
     // Unlocked Abilities
     if (stage > 1 && playerTurn) {
@@ -548,11 +587,6 @@ function showStageAnnouncement() {
         clearTimeout(timer);
     }
 
-    const baseTime = 4000;
-    const timePerCharacter = 300;
-    const stageBonus = stage * 200;
-    totalTime = baseTime + (currentPrompt.length * timePerCharacter) - stageBonus;
-    if (agilityUsed) totalTime = totalTime * 2;
 
     //  Boss abilities trigger only when boss is last enemy
     if (enemies.every(e => e.hp <= 0) && boss.hp > 0) {
@@ -579,7 +613,7 @@ function showStageAnnouncement() {
     }, 50);
 
     startTimer();
-  }
+  
   // reversePower();
 
   //  Typing Handler
@@ -587,15 +621,13 @@ function showStageAnnouncement() {
     if (isPaused) return;
   
     const typed = inputEl.value.trim().toLowerCase();
-  
     const expectedPrompt = isReplicaActive ? `${currentPrompt} ${currentPrompt}` : currentPrompt;
   
     if (typed === expectedPrompt) {
       if (timer && timer.stop) timer.stop();
       document.getElementById("promptTimerBarContainer").style.display = "none";
   
-      isReplicaActive = false; // Reset replica if it was active
-  
+      isReplicaActive = false; // Reset replica flag after successful typing
       score++;
       document.getElementById("score").textContent = score;
   
@@ -609,6 +641,7 @@ function showStageAnnouncement() {
       } else {
         nextPrompt();
       }
+      return;
     }
 
     // Unlocked Abilities
@@ -928,16 +961,12 @@ function showStageAnnouncement() {
   reversePower();
 
   // BOSS 6 ABILITY 
-  let isReplicaActive = false;
 
   function replicaPower() {
     let aliveEnemies = enemies.filter(e => e.hp > 0);
-  
-    if (stage == 6 && aliveEnemies.length === 0) {
-      // Duplicate the current prompt
-      currentPrompt = `${currentPrompt} ${currentPrompt}`;
+    
+    if (stage === 6 && aliveEnemies.length === 0) {
       isReplicaActive = true;
-      document.getElementById("promptText").textContent = `Fight the enemy! Type the command twice: "${currentPrompt}"`;
     }
   }
 
