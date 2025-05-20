@@ -847,9 +847,8 @@ function showStageAnnouncement() {
       document.getElementById("victory-text").style.display = "none";
       document.getElementById("ending-screen").style.display = "none";
     }
-    showDefeatedScreen();
   }
-  //////////////////////// BOSS 4 ABILITY ///////////////////////////////////////
+  // BOSS 4 ABILITY 
   function blindPower() {
     // let bossSprite = document.getElementById("bossSprite").src;
 
@@ -874,12 +873,14 @@ function showStageAnnouncement() {
         blindPower();
       }
     }, 3000);
-//////////////////////// BOSS 5 ABILITY ///////////////////////////////////////
+    
+// BOSS 5 ABILITY
   let lastWord = "";
   function reversePower() {
     let aliveEnemies = enemies.filter(e => e.hp > 0)
-
-    if (stage == 5 && aliveEnemies.length === 0) {
+    // && aliveEnemies.length === 0
+    console.log("hello");
+    if (stage == 5) {
       let reverseWord = document.getElementById("promptText");
       console.log(reverseWord.textContent);
       if (!reverseWord) {
@@ -888,32 +889,42 @@ function showStageAnnouncement() {
       }
       let newWord = reverseWord.textContent;
 
-      let word = newWord.match(/"([^"]+)"/);
-        if (!word) {
+      let word = Array.from(newWord.matchAll(/"([^"]+)"/g));
+        if (word === 0) {
             console.error("No quoted word found!");
             return;
         }
+      // let newText = newWord;
+      // word.forEach(match => {
+      //   let commandWord = match[1];
+      //   let reversedWord = commandWord.split("").reverse().join("");
+      //   newWord = newWord.replaceAll(`"${commandWord}"`,`"${reversedWord}"`);
+      // })
 
-      let commandWord = word[1];
-      let newText = newWord;
-      if (commandWord != lastWord) {
-        let reversedWord = commandWord.split("").reverse().join("");
-        newText = newWord.replace(`"${commandWord}"`, `"${reversedWord}"`);
-        reverseWord.textContent = newText;
-        lastWord = commandWord;
-      }
+      reverseWord.textContent = newWord;
 
-      console.log("Updated text:", newText);
-
+      // if (commandWord != lastWord) {
+      //   let reversedWord = commandWord.split("").reverse().join("");
+      //   newText = newWord.replace(`"${commandWord}"`, `"${reversedWord}"`);
+      //   reverseWord.textContent = newText;
+      //   lastWord = commandWord;
+      // }
+      console.log("Updated text:", newWord);
       // console.log(reverseWord.textContent); // Output: "ssob"
-
     }
     setInterval(reversePower, 6000);
+  }
     reversePower();
+  // BOSS 6 ABILITY 
+  function replicaPower() {
+
   }
 
+  // BOSS 7 ABILITY 
+  function shrinkTimePower() {
 
-
+  }
+  // Game Over
   function completeGame(){
     document.getElementById("victory-text").style.display = "block";
     document.getElementById("ending-screen").style.display = "block";
