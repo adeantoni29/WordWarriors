@@ -556,7 +556,7 @@ function showStageAnnouncement() {
 
     //  Boss abilities trigger only when boss is last enemy
     if (enemies.every(e => e.hp <= 0) && boss.hp > 0) {
-      if (stage === 4) blurPower();
+      if (stage === 4) blindPower();
       if (stage === 5) reversePower();
       if (stage === 6) replicaPower();
       if (stage === 7) shrinkTimePower(); // modifies totalTime
@@ -871,19 +871,10 @@ function showStageAnnouncement() {
 
       setTimeout(() => {
         document.getElementById("promptText").style.filter = "none";
-      }, 7500);
-
-      randomInterval = Math.floor(Math.random() * (8000) + 8000);
-      setTimeout(blindPower, randomInterval);
+      }, 2000);
     }
   }
-   setInterval(() => {
-      let aliveEnemies = enemies.filter(e => e.hp > 0);
-      // let boss = enemies.find(e => e.type === "boss");
-      if (aliveEnemies.length === 0) {
-        blindPower();
-      }
-    }, 3000);
+
     
 // BOSS 5 ABILITY
   let lastWord = "";

@@ -17,6 +17,7 @@ html { /* Having body here too causes a smaller copy of the background image to 
     width: min(75vw, 800px);
 }
 #game-container{
+    font-family: 'Georgia', serif;
     display: none;
     margin: 100px auto 0px;
     border: 3px solid red;
@@ -222,6 +223,7 @@ input[type="text"] {
 }
 
 #ability-announcement-screen {
+    font-family: 'Georgia', serif;
     margin: auto;
     margin-top: 155px;
     height: 300px;
