@@ -143,6 +143,7 @@ function loadGameFromFile(event) {
   let remainingTime = 0;
   let gameActive = false;
   let isReplicaActive = false;
+  let reverseApplied = false;
   
   let now,dt,
     last = timestamp()
@@ -621,7 +622,12 @@ function showStageAnnouncement() {
     if (isPaused) return;
   
     const typed = inputEl.value.trim().toLowerCase();
-    const expectedPrompt = isReplicaActive ? `${currentPrompt} ${currentPrompt}` : currentPrompt;
+    let expectedPrompt = isReplicaActive ? `${currentPrompt} ${currentPrompt}` : currentPrompt;
+
+    // If we're in stage 5, all enemies are gone, and boss 5 is active, reverse the expected prompt
+    if (stage === 5 && enemies.every(e => e.hp <= 0)) {
+    expectedPrompt = expectedPrompt.split("").reverse().join("");
+    }
   
     if (typed === expectedPrompt) {
       if (timer && timer.stop) timer.stop();
@@ -910,46 +916,56 @@ function showStageAnnouncement() {
 
     
 // BOSS 5 ABILITY
-  let lastWord = "";
-  function reversePower() {
-    let aliveEnemies = enemies.filter(e => e.hp > 0)
-    // && aliveEnemies.length === 0
-    console.log("hello");
-    if (stage == 5) {
-      let reverseWord = document.getElementById("promptText");
-      console.log(reverseWord.textContent);
-      if (!reverseWord) {
-        console.error("Element with ID 'promptText' not found!");
-        return;
-      }
-      let newWord = reverseWord.textContent;
+function reversePower() {
+  if (reverseApplied || stage !== 5 || enemies.some(e => e.hp > 0)) return;
 
-      let word = Array.from(newWord.matchAll(/"([^"]+)"/g));
-        if (word === 0) {
-            console.error("No quoted word found!");
-            return;
-        }
-      // let newText = newWord;
-      // word.forEach(match => {
-      //   let commandWord = match[1];
-      //   let reversedWord = commandWord.split("").reverse().join("");
-      //   newWord = newWord.replaceAll(`"${commandWord}"`,`"${reversedWord}"`);
-      // })
-
-      reverseWord.textContent = newWord;
-
-      // if (commandWord != lastWord) {
-      //   let reversedWord = commandWord.split("").reverse().join("");
-      //   newText = newWord.replace(`"${commandWord}"`, `"${reversedWord}"`);
-      //   reverseWord.textContent = newText;
-      //   lastWord = commandWord;
-      // }
-      console.log("Updated text:", newWord);
-      // console.log(reverseWord.textContent); // Output: "ssob"
-    }
-    setInterval(reversePower, 6000);
+  const promptEl = document.getElementById("promptText");
+  if (!promptEl) {
+    console.error("Element with ID 'promptText' not found!");
+    return;
   }
-  reversePower();
+
+  let text = promptEl.textContent;
+  const matches = Array.from(text.matchAll(/"([^"]+)"/g));
+
+  if (!matches || matches.length === 0) {
+    console.warn("No quoted words found to reverse.");
+    return;
+  }
+
+  matches.forEach(match => {
+    const word = match[1];
+    const reversed = word.split("").reverse().join("");
+
+    text = text.replaceAll(`"${word}"`, `"${reversed}"`);
+
+    if (word === currentPrompt) {
+      currentPrompt = reversed;
+    }
+
+    if (isReplicaActive && word === `${currentPrompt} ${currentPrompt}`) {
+      currentPrompt = currentPrompt.split("").reverse().join("");
+    }
+  });
+
+  promptEl.textContent = text;
+  reverseApplied = true;
+}
+
+// Automatically trigger during stage 5 when enemies are gone
+setInterval(() => {
+  if (stage === 5 && enemies.every(e => e.hp <= 0)) {
+    reversePower();
+  }
+}, 1000);
+
+// Reset the reverse effect once you're no longer in stage 5
+setInterval(() => {
+  if (stage !== 5 && reverseApplied) {
+    currentPrompt = "";
+    reverseApplied = false;
+  }
+}, 1000);
 
   // BOSS 6 ABILITY 
 
