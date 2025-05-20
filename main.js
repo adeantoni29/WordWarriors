@@ -142,8 +142,6 @@ let totalTime = 0;
 let timerStartTime = 0;
 let remainingTime = 0;
 let gameActive = false;
-let isReplicaActive = false;
-let reverseApplied = false;
 
 let now,dt,
   last = timestamp()
@@ -431,6 +429,7 @@ function resetStage() {
   agilityUsed = false;
 
   playerHP = 100;
+  totalTime = 4500;
   updateBars();
 
   const bossSprite = `assets/avatar/boss_${stage}_idle.png`;
@@ -491,221 +490,182 @@ function createEnemies() {
 
 // Prompt Logic 
 function nextPrompt() {
-  if (!gameActive) {
-    inputEl.value = "";
-    inputEl.disabled = true;
-    return;
-  }
-
-  playerTurn = !playerTurn;
-
-  let difficulty = "easy";
-  if (stage >= 3 && stage < 5) difficulty = "medium";
-  else if (stage >= 5 && stage < 7) difficulty = "hard";
-  else if (stage >= 7) difficulty = "insane";
-
-  if (!playerTurn && iceSpellUsed) iceWearOff();
-
-  const pool = playerTurn ? promptPoolAttack[difficulty] : promptPoolDefend[difficulty];
-  currentPrompt = pool[Math.floor(Math.random() * pool.length)];
-
-  // Determine full prompt and expected input
-  const actualPrompt = isReplicaActive && playerTurn ? `${currentPrompt} ${currentPrompt}` : currentPrompt;
-
-  // Build prompt display
-  let promptMessage = playerTurn
-    ? `Fight the enemy! Type: "${currentPrompt}"`
-    : `Defend yourself! Type: "${currentPrompt}"`;
-
-  if (isReplicaActive && playerTurn) {
-    promptMessage = `Fight the enemy! Type the command twice: "${currentPrompt}"`;
-  }
-
-  document.getElementById("promptText").textContent = promptMessage;
-
-  // Reset input and start timer
-  inputEl.value = "";
-  inputEl.disabled = false;
-  inputEl.focus();
-
-  if (timer) clearInterval(timer);
-
-  totalTime = 4000 + (actualPrompt.length * 300) - (stage * 200);
-  if (agilityUsed) totalTime *= 2;
-
-  timerStartTime = Date.now();
-  remainingTime = totalTime;
-
-  const barContainer = document.getElementById("promptTimerBarContainer");
-  timerBar = document.getElementById("promptTimerBar");
-  barContainer.style.display = "block";
-  timerBar.style.transition = "none";
-  timerBar.style.width = "100%";
-
-  if (isPaused) return;
-
-  setTimeout(() => {
-    timerBar.style.transition = `width ${totalTime}ms linear`;
-    timerBar.style.width = "0%";
-  }, 50);
-
-  startTimer();
-}
-
-  // Unlocked Abilities
-  if (stage > 1 && playerTurn) {
-    const poolUnlock1 = promptPoolUnlock1[difficulty];
-    promptUnlock1 = poolUnlock1[Math.floor(Math.random() * poolUnlock1.length)];
-    document.getElementById("promptText").innerHTML += `<br>Use a healing potion! Type: "${promptUnlock1}"`;
-  }
-  if (stage > 2 && !playerTurn) {
-    const poolUnlock2 = promptPoolUnlock2[difficulty];
-    promptUnlock2 = poolUnlock2[Math.floor(Math.random() * poolUnlock2.length)];
-    document.getElementById("promptText").innerHTML += `<br>Counter the enemy's attack! Type: "${promptUnlock2}"`;
-  }
-  if (stage > 3 && playerTurn) {
-    const poolUnlock3 = promptPoolUnlock3[difficulty];
-    promptUnlock3 = poolUnlock3[Math.floor(Math.random() * poolUnlock3.length)];
-    document.getElementById("promptText").innerHTML += `<br>Use a wide slash! Type: "${promptUnlock3}"`;
-  }
-  if (stage > 4 && playerTurn && !iceSpellUsed) {
-    const poolUnlock4 = promptPoolUnlock4[difficulty];
-    promptUnlock4 = poolUnlock4[Math.floor(Math.random() * poolUnlock4.length)];
-    document.getElementById("promptText").innerHTML += `<br>Use an ice spell! Type: "${promptUnlock4}"`;
-  }
-  if (stage > 5 && playerTurn && !agilityUsed) {
-    const poolUnlock5 = promptPoolUnlock5[difficulty];
-    promptUnlock5 = poolUnlock5[Math.floor(Math.random() * poolUnlock5.length)];
-    document.getElementById("promptText").innerHTML += `<br>Use an agility potion! Type: "${promptUnlock5}"`;
-  }
-
-  document.getElementById("game-log").textContent = "";
-  inputEl.value = "";
-  inputEl.disabled = false;
-  inputEl.focus();
-
-  if (timer) {
-      clearTimeout(timer);
-  }
-
-
-  //  Boss abilities trigger only when boss is last enemy
-  if (enemies.every(e => e.hp <= 0) && boss.hp > 0) {
-    if (stage === 4) blindPower();
-    if (stage === 5) reversePower();
-    if (stage === 6) replicaPower();
-    if (stage === 7) shrinkTimePower(); // modifies totalTime
-  }
-
-  timerStartTime = Date.now();
-  remainingTime = totalTime; 
-
-  const barContainer = document.getElementById("promptTimerBarContainer");
-  timerBar = document.getElementById("promptTimerBar");
-  barContainer.style.display = "block";
-  timerBar.style.transition = "none";
-  timerBar.style.width = "100%";
+    if (!gameActive) {
+      inputEl.value = "";
+      inputEl.disabled = true;
+      return;
+    }
+    playerTurn = !playerTurn;
   
-  setTimeout(() => {
-    timerBar.style.transition = `width ${totalTime}ms linear`;
-    timerBar.style.width = "0%";
-  }, 50);
+    let difficulty = "easy";
+    if (stage >= 3 && stage < 5) difficulty = "medium";
+    else if (stage >= 5 && stage < 7) difficulty = "hard";
+    else if (stage >= 7) difficulty = "insane";
+  
+    if (!playerTurn && iceSpellUsed) {
+      iceWearOff();
+    }
 
-  startTimer();
+    const pool = playerTurn ? promptPoolAttack[difficulty] : promptPoolDefend[difficulty];
+    currentPrompt = pool[Math.floor(Math.random() * pool.length)];
+    if (stage === 6) currentPrompt = replicaPower(currentPrompt);
 
-// reversePower();
+    document.getElementById("promptText").textContent = playerTurn
+      ? `Fight the enemy! Type: "${currentPrompt}"`
+      : `Defend yourself! Type: "${currentPrompt}"`;
+
+    // Unlocked Abilities
+    if (stage > 1 && playerTurn) {
+      const poolUnlock1 = promptPoolUnlock1[difficulty];
+      promptUnlock1 = poolUnlock1[Math.floor(Math.random() * poolUnlock1.length)];
+      if (stage === 6) promptUnlock1 = replicaPower(promptUnlock1);
+      document.getElementById("promptText").innerHTML += `<br>Use a healing potion! Type: "${promptUnlock1}"`;
+    }
+    if (stage > 2 && !playerTurn) {
+      const poolUnlock2 = promptPoolUnlock2[difficulty];
+      promptUnlock2 = poolUnlock2[Math.floor(Math.random() * poolUnlock2.length)];
+      if (stage === 6) promptUnlock2 = replicaPower(promptUnlock2);
+      document.getElementById("promptText").innerHTML += `<br>Counter the enemy's attack! Type: "${promptUnlock2}"`;
+    }
+    if (stage > 3 && playerTurn) {
+      const poolUnlock3 = promptPoolUnlock3[difficulty];
+      promptUnlock3 = poolUnlock3[Math.floor(Math.random() * poolUnlock3.length)];
+      if (stage === 6) promptUnlock3 = replicaPower(promptUnlock3);
+      document.getElementById("promptText").innerHTML += `<br>Use a wide slash! Type: "${promptUnlock3}"`;
+    }
+    if (stage > 4 && playerTurn && !iceSpellUsed) {
+      const poolUnlock4 = promptPoolUnlock4[difficulty];
+      promptUnlock4 = poolUnlock4[Math.floor(Math.random() * poolUnlock4.length)];
+      if (stage === 6) promptUnlock4 = replicaPower(promptUnlock4);
+      document.getElementById("promptText").innerHTML += `<br>Use an ice spell! Type: "${promptUnlock4}"`;
+    }
+    if (stage > 5 && playerTurn && !agilityUsed) {
+      const poolUnlock5 = promptPoolUnlock5[difficulty];
+      promptUnlock5 = poolUnlock5[Math.floor(Math.random() * poolUnlock5.length)];
+      if (stage === 6) promptUnlock5 = replicaPower(promptUnlock5);
+      document.getElementById("promptText").innerHTML += `<br>Use an agility potion! Type: "${promptUnlock5}"`;
+    
+    }
+
+    document.getElementById("game-log").textContent = "";
+    inputEl.value = "";
+    inputEl.disabled = false;
+    inputEl.focus();
+  
+    if (timer) {
+        clearTimeout(timer);
+    }
+
+    //  Boss abilities trigger only when boss is last enemy
+    if (enemies.every(e => e.hp <= 0) && boss.hp > 0) {
+      if (stage === 4) blindPower();
+      if (stage === 5) reversePower();
+    }
+
+    timerStartTime = Date.now();
+    remainingTime = totalTime; 
+
+    const barContainer = document.getElementById("promptTimerBarContainer");
+    timerBar = document.getElementById("promptTimerBar");
+    barContainer.style.display = "block";
+    timerBar.style.transition = "none";
+    timerBar.style.width = "100%";
+  
+    if (isPaused) return;
+    
+    setTimeout(() => {
+      timerBar.style.transition = `width ${totalTime}ms linear`;
+      timerBar.style.width = "0%";
+    }, 50);
+
+    startTimer();
+  }
 
 //  Typing Handler
 function handleTyping() {
-  if (isPaused) return;
+    if (isPaused) return;
+  
+    const typed = inputEl.value.trim().toLowerCase();
 
-  const typed = inputEl.value.trim().toLowerCase();
-  let expectedPrompt = isReplicaActive ? `${currentPrompt} ${currentPrompt}` : currentPrompt;
+    if (typed === currentPrompt) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+  
+      score++;
+      document.getElementById("score").textContent = score;
+  
+      if (playerTurn) {
+        attackEnemyOrBoss(1);
+  
+        document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
+        setTimeout(() => {
+          document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
+        }, 500);
+      } else {
+        nextPrompt();
+      }
+    }
 
-  // If we're in stage 5, all enemies are gone, and boss 5 is active, reverse the expected prompt
-  if (stage === 5 && enemies.every(e => e.hp <= 0)) {
-  expectedPrompt = expectedPrompt.split("").reverse().join("");
-  }
-
-  if (typed === expectedPrompt) {
-    if (timer && timer.stop) timer.stop();
-    document.getElementById("promptTimerBarContainer").style.display = "none";
-
-    isReplicaActive = false; // Reset replica flag after successful typing
-    score++;
-    document.getElementById("score").textContent = score;
-
-    if (playerTurn) {
-      attackEnemyOrBoss(1);
-
+    // Unlocked Abilities
+    if (stage > 1 && playerTurn && typed === promptUnlock1) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      score++;
+      document.getElementById("score").textContent = score;
+      healingPotion();
+    }
+    if (stage > 2 && !playerTurn && typed === promptUnlock2) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      score++;
+      document.getElementById("score").textContent = score;
+      attackEnemyOrBoss(0.5);
+      
       document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
       setTimeout(() => {
         document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
       }, 500);
-    } else {
+    }
+    if (stage > 3 && playerTurn && typed === promptUnlock3) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      score++;
+      document.getElementById("score").textContent = score;
+      wideSlash();
+      
+      document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
+      setTimeout(() => {
+        document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
+      }, 500);
+    }
+    if (stage > 4 && playerTurn && typed === promptUnlock4 && !iceSpellUsed) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      score++;
+      document.getElementById("score").textContent = score;
+      iceSpell();
+      
+      document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
+      setTimeout(() => {
+        document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
+      }, 500);
+    }
+    if (stage > 5 && playerTurn && typed === promptUnlock5 && !agilityUsed) {
+      if (timer && timer.stop) timer.stop();
+      document.getElementById("promptTimerBarContainer").style.display = "none";
+  
+      score++;
+      document.getElementById("score").textContent = score;
+      agilityUsed = true;
+      totalTime = totalTime * 2;
       nextPrompt();
     }
-    return;
   }
-
-  // Unlocked Abilities
-  if (stage > 1 && playerTurn && typed === promptUnlock1) {
-    if (timer && timer.stop) timer.stop();
-    document.getElementById("promptTimerBarContainer").style.display = "none";
-
-    score++;
-    document.getElementById("score").textContent = score;
-    healingPotion();
-  }
-  if (stage > 2 && !playerTurn && typed === promptUnlock2) {
-    if (timer && timer.stop) timer.stop();
-    document.getElementById("promptTimerBarContainer").style.display = "none";
-
-    score++;
-    document.getElementById("score").textContent = score;
-    attackEnemyOrBoss(0.5);
-    
-    document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
-    setTimeout(() => {
-      document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
-    }, 500);
-  }
-  if (stage > 3 && playerTurn && typed === promptUnlock3) {
-    if (timer && timer.stop) timer.stop();
-    document.getElementById("promptTimerBarContainer").style.display = "none";
-
-    score++;
-    document.getElementById("score").textContent = score;
-    wideSlash();
-    
-    document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
-    setTimeout(() => {
-      document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
-    }, 500);
-  }
-  if (stage > 4 && playerTurn && typed === promptUnlock4 && !iceSpellUsed) {
-    if (timer && timer.stop) timer.stop();
-    document.getElementById("promptTimerBarContainer").style.display = "none";
-
-    score++;
-    document.getElementById("score").textContent = score;
-    iceSpell();
-    
-    document.getElementById("playerSprite").src = `assets/avatar/player_attack.png`;
-    setTimeout(() => {
-      document.getElementById("playerSprite").src = `assets/avatar/player_idle.png`;
-    }, 500);
-  }
-  if (stage > 5 && playerTurn && typed === promptUnlock5 && !agilityUsed) {
-    if (timer && timer.stop) timer.stop();
-    document.getElementById("promptTimerBarContainer").style.display = "none";
-
-    score++;
-    document.getElementById("score").textContent = score;
-    agilityUsed = true;
-    nextPrompt();
-  }
-}
 
 //  Attack Logic 
 function attackEnemyOrBoss(damage) {
@@ -782,6 +742,7 @@ function enemyAttack() {
       document.getElementById(`enemySprite_${enemyIndex}`).src = "assets/avatar/enemy_idle.png";
     }, 500);
   } else {
+    if (stage === 7) shrinkTimePower(); // modifies totalTime
     document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_attack.png`;
     setTimeout(() => {
       document.getElementById("bossSprite").src = `assets/avatar/boss_${stage}_idle.png`;
@@ -898,87 +859,51 @@ function showDefeatedScreen() {
     document.getElementById("ending-screen").style.display = "none";
   }
 }
-// BOSS 4 ABILITY 
-function blindPower() {
-  let aliveEnemies = enemies.filter(e => e.hp > 0);
+  // BOSS 4 ABILITY 
+  function blindPower() {
+    let aliveEnemies = enemies.filter(e => e.hp > 0);
+      
+    if (stage == 4 && aliveEnemies.length === 0) {
+      document.getElementById("promptText").style.filter = "blur(7px)";
+      document.getElementById("promptText").style.transition = "filter .5s ease-out";
+
+      setTimeout(() => {
+        document.getElementById("promptText").style.filter = "none";
+      }, 2000);
+    }
+  }
+
     
-  if (stage == 4 && aliveEnemies.length === 0) {
-    document.getElementById("promptText").style.filter = "blur(7px)";
-    document.getElementById("promptText").style.transition = "filter .5s ease-out";
+  // BOSS 5 ABILITY
+  function reversePower() {
+    let aliveEnemies = enemies.filter(e => e.hp > 0);
+      
+    if (stage == 5 && aliveEnemies.length === 0) {
+      document.getElementById("promptText").style.transform = "scaleX(-1)";
 
-    setTimeout(() => {
-      document.getElementById("promptText").style.filter = "none";
-    }, 2000);
+      setTimeout(() => {
+      document.getElementById("promptText").style.transform = "scaleX(1)";
+      }, 2000);
+    }
+    
   }
-}
 
+  // BOSS 6 ABILITY 
+  function replicaPower(word) {
+    let aliveEnemies = enemies.filter(e => e.hp > 0);
   
-// BOSS 5 ABILITY
-function reversePower() {
-if (reverseApplied || stage !== 5 || enemies.some(e => e.hp > 0)) return;
-
-const promptEl = document.getElementById("promptText");
-if (!promptEl) {
-  console.error("Element with ID 'promptText' not found!");
-  return;
-}
-
-let text = promptEl.textContent;
-const matches = Array.from(text.matchAll(/"([^"]+)"/g));
-
-if (!matches || matches.length === 0) {
-  console.warn("No quoted words found to reverse.");
-  return;
-}
-
-matches.forEach(match => {
-  const word = match[1];
-  const reversed = word.split("").reverse().join("");
-
-  text = text.replaceAll(`"${word}"`, `"${reversed}"`);
-
-  if (word === currentPrompt) {
-    currentPrompt = reversed;
+    if (stage == 6 && aliveEnemies.length === 0) {
+      return word + word;
+    } else {
+      return word;
+    }
   }
 
-  if (isReplicaActive && word === `${currentPrompt} ${currentPrompt}`) {
-    currentPrompt = currentPrompt.split("").reverse().join("");
+  // BOSS 7 ABILITY 
+  function shrinkTimePower() {
+    agilityUsed = false;
+    totalTime = Math.max(totalTime * 0.5, 3500);
   }
-});
-
-promptEl.textContent = text;
-reverseApplied = true;
-}
-
-// Automatically trigger during stage 5 when enemies are gone
-setInterval(() => {
-if (stage === 5 && enemies.every(e => e.hp <= 0)) {
-  reversePower();
-}
-}, 1000);
-
-// Reset the reverse effect once you're no longer in stage 5
-setInterval(() => {
-if (stage !== 5 && reverseApplied) {
-  currentPrompt = "";
-  reverseApplied = false;
-}
-}, 1000);
-
-// BOSS 6 ABILITY 
-
-function replicaPower() {
-  let aliveEnemies = enemies.filter(e => e.hp > 0);
-  
-  if (stage === 6 && aliveEnemies.length === 0) {
-    isReplicaActive = true;
-  }
-}
-
-// BOSS 7 ABILITY 
-function shrinkTimePower() {
-  totalTime *= 0.5; // half the total time
-}
 
 // Game Over
 function completeGame(){
