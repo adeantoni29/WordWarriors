@@ -245,83 +245,8 @@ function startTimer() {
         handleFailure("Time's up!");
         
       }
-<<<<<<< HEAD
-  
-      if (elapsed >= this.duration) {
-        this.running = false;
-        this.onExpire?.();
-      } else {
-        this.frameId = requestAnimationFrame(this.tick);
-      }
-    }
-  
-    stop() {
-      if (this.frameId) cancelAnimationFrame(this.frameId);
-      this.running = false;
-    }
-  }
-  
-  //  Game Start 
-  function newGame() {
-    document.getElementById("game-title").style.display = "none";
-    document.getElementById("start-screen").style.display = "none";
-    document.getElementById("game-container").style.display = "block";
-    startGame();
-  }
-  function timestamp() {
-    return window.performance && window.performance.now ? window.performance.now() : new Date().getTime;
-  }
-  
-  function loadGame() {
-    document.getElementById("game-title").style.display = "none";
-    document.getElementById("start-screen").style.display = "none";
-    document.getElementById("defeated-screen").style.display = "none";
-    document.getElementById("game-container").style.display = "block";
-    update();
-    render();
-    requestAnimationFrame(frame);
-    resetStage();
-
-  }
-
-  function frame() {
-    now = timestamp();
-    dt = dt + Math.min(1, (now - last) / 1000);
-      while(dt > step) {
-        dt = dt - step;
-        update(dt);
-      }
-    render(dt);
-    last = now;
-    requestAnimationFrame(frame);
-  }
-  
-  function startGame() {
-    stage = 1;
-    score = 0;
-    playerHP = 100;
-    updateBars();
-    resetStage();
-  }
-
-  function startTimer() {
-    if (timer) clearInterval(timer);
-
-    timer = setInterval(() => {
-        let elapsed = Date.now() - timerStartTime;
-        let timeLeft = remainingTime - elapsed;
-
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          if (!playerTurn && boss.hp > 0) enemyAttack();
-          handleFailure("Time's up!");
-        }
-    }, 100);
-  }
-=======
   }, 100);
 }
->>>>>>> fbbeec695519b3f183cbecce17a9f328f3c685dc
 
 function pauseKeybind(e) {
   if (e.key === "Escape") {
@@ -352,12 +277,8 @@ function resumeGame() {
     inputEl.disabled = false;
     document.getElementById("pause-screen").style.display = "none";
   
-<<<<<<< HEAD
-  // perfect ability screen
-=======
     timerStartTime = Date.now();
     startTimer();
->>>>>>> fbbeec695519b3f183cbecce17a9f328f3c685dc
 
     timerBar.style.transition = "width " + remainingTime + "ms linear";
     timerBar.style.width = "0%";
@@ -421,15 +342,6 @@ function showAbilityAnnouncement() {
   const abilityDescription = document.getElementById("ability-description");
   const announcementScreen = document.getElementById("ability-announcement-screen");
 
-<<<<<<< HEAD
-    // Get the ability for the current stage
-    const ability = abilities[currentStage - 1];
-   
-    // Update the announcement message
-    announcement.textContent = ability.message;
-    abilityImage.src = ability.image; // Set the image source
-    abilityDescription.textContent = ability.description;
-=======
   // Get the ability for the current stage
   const ability = abilities[currentStage - 1];
  
@@ -438,7 +350,6 @@ function showAbilityAnnouncement() {
   announcement.textContent = ability.message;
   abilityImage.src = ability.image; // Set the image source
   abilityDescription.textContent = ability.description;
->>>>>>> fbbeec695519b3f183cbecce17a9f328f3c685dc
 
   // Show hidden elements
   abilityImage.style.display = "inline-block";
@@ -465,17 +376,6 @@ resetStage();
 
 // Function to show the stage announcement after defeating a boss
 function showStageAnnouncement() {
-<<<<<<< HEAD
-    if (!gameActive) return;
-    const screen = document.getElementById("ability-announcement-screen");
-    // const announcement = document.getElementById("stage-announcement");
-    const gameContainer = document.getElementById("game-container");
-    screen.style.display = "block";
-    gameContainer.style.display = "none"; // Hide game container
-
-    // let countdown = 3; // Start countdown from 3 seconds
-    showAbilityAnnouncement();
-=======
   if (!gameActive) return;
   const screen = document.getElementById("ability-announcement-screen");
   const announcement = document.getElementById("stage-announcement");
@@ -487,7 +387,6 @@ function showStageAnnouncement() {
   let countdown = 3; // Start countdown from 3 seconds
 
   showAbilityAnnouncement();
->>>>>>> fbbeec695519b3f183cbecce17a9f328f3c685dc
 }
 
 
@@ -727,21 +626,7 @@ function handleTyping() {
     } else {
       nextPrompt();
     }
-<<<<<<< HEAD
-
-    if (playerHP <= 0) {
-      document.getElementById("playerSprite").src = `assets/avatar/player_hurt.png`;
-      document.getElementById("playerHealth").style.width = "0%";
-  
-      setTimeout(() => {
-      inputEl.disabled = true;
-      showDefeatedScreen();
-      }, 1000);
-    }
-    updateBars();
-=======
     return;
->>>>>>> fbbeec695519b3f183cbecce17a9f328f3c685dc
   }
 
   // Unlocked Abilities
