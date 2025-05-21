@@ -384,7 +384,6 @@ function showStageAnnouncement() {
   
   document.removeEventListener("keydown", pauseKeybind);
   document.getElementById("pause-screen").style.display = "none";
-  if (!isPaused) return;
   isPaused = false;
 
   const screen = document.getElementById("ability-announcement-screen");
