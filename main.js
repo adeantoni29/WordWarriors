@@ -383,6 +383,10 @@ function showStageAnnouncement() {
   gameActive = false;
   
   document.removeEventListener("keydown", pauseKeybind);
+  document.getElementById("pause-screen").style.display = "none";
+  if (!isPaused) return;
+  isPaused = false;
+
   const screen = document.getElementById("ability-announcement-screen");
   const announcement = document.getElementById("stage-announcement");
   const gameContainer = document.getElementById("game-container");
@@ -896,6 +900,9 @@ function showDefeatedScreen() {
 
 // Game Over
 function completeGame(){
+  gameActive = false;
+  
+  document.removeEventListener("keydown", pauseKeybind);
   document.getElementById("victory-text").style.display = "block";
   document.getElementById("ending-screen").style.display = "block";
   document.getElementById("game-container").style.display = "none";
