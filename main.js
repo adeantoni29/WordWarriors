@@ -339,7 +339,6 @@ const abilities = [
 ];
 
 function showAbilityAnnouncement() {
-  if (!gameActive) return;
   const announcement = document.getElementById("ability-announcement");
   const abilityImage = document.getElementById("ability-image");
   const abilityDescription = document.getElementById("ability-description");
@@ -365,6 +364,8 @@ function showAbilityAnnouncement() {
 
 // Move to the next stage when the "Next Stage" button is clicked
 function nextStage() {
+gameActive = true;
+
 if (currentStage < abilities.length) {
   currentStage++;
 }
@@ -379,15 +380,17 @@ resetStage();
 
 // Function to show the stage announcement after defeating a boss
 function showStageAnnouncement() {
-  if (!gameActive) return;
+  gameActive = false;
+  
+  document.removeEventListener("keydown", pauseKeybind);
   const screen = document.getElementById("ability-announcement-screen");
   const announcement = document.getElementById("stage-announcement");
   const gameContainer = document.getElementById("game-container");
 
   screen.style.display = "block";
   gameContainer.style.display = "none"; // Hide game container
-
-  let countdown = 3; // Start countdown from 3 seconds
+  
+  clearInterval(timer);
 
   showAbilityAnnouncement();
 }
